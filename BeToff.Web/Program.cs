@@ -1,7 +1,27 @@
+using BeToff.Entities;
+using BeToff.DAL;
+using Microsoft.EntityFrameworkCore;
+using BeToff.BLL.Interface;
+using BeToff.BLL;
+using BeToff.DAL.Interface;
+
+
 var builder = WebApplication.CreateBuilder(args);
+string ConnectionString = "BeToffDbContext";
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+
+// Loading Databases (DI)
+builder.Services.AddDbContext<BeToffDbContext>(
+    options => options.UseSqlServer(builder.Configuration.GetConnectionString(ConnectionString) ?? throw new InvalidOperationException("Connection string 'BeToffDbContext' not found."))
+);
+
+builder.Services.AddTransient<IUserDao, UserDao>();
+builder.Services.AddTransient<IUserBc, UserBc>();
+
+
 
 var app = builder.Build();
 

@@ -1,11 +1,8 @@
 using BeToff.Entities;
 
-namespace BeToff.DAL;
+namespace BeToff.DAL.Interface;
 
 public interface IBetoff<T> where T: BeToffEntity
 {
-    T GetElement(Guid id);
-    T Insert( Guid id);
-    T Update( Guid id);
-    T Delete(Guid id);
+    //T Insert();
 }

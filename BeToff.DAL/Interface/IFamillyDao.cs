@@ -1,4 +1,4 @@
-namespace BeToff.DAL;
+namespace BeToff.DAL.Interface;
 
 public interface IFamillyDao
 {

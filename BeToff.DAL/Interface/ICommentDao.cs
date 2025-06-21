@@ -1,7 +1,7 @@
 using System.Reflection.Metadata.Ecma335;
 using BeToff.Entities;
 
-namespace BeToff.DAL;
+namespace BeToff.DAL.Interface;
 
 public interface ICommentDao : IBetoff<Comment>
 {

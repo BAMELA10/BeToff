@@ -1,0 +1,77 @@
+﻿@model BeToff.Entities.User
+
+@{
+    ViewData["Title"] = "User";
+}
+
+<script>
+
+    function CheckPassword() {
+        
+        const Password1 = document.getElementById("password1").value;
+        const Password2 = document.getElementById("password2").value;
+        
+        const ErrorPassword = document.getElementById("ErrorPassword");
+        
+        if (Password2 && Password1 === Password2)
+        {
+            return true;
+        }
+        ErrorPassword.innerText = "The Passwords doesn't match";
+        return false;
+        /* class="border-dark border-0 shadow-lg" */
+    }
+
+
+</script>
+
+<div class="row justify-content-center">
+    <div class="col-md-4 ">
+        <form  asp-action="Register" onsubmit="return CheckPassword()"> 
+            <h1>Registration </h1>
+            <hr />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="FirstName" class="control-label"> First Name </label>
+                <input asp-for="FirstName" class="form-control" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LastName" class="control-label"> Last Name </label>
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password" class="control-label"></label>
+                <input id="password1" asp-for="Password" class="form-control" type="password" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Rewrite Password</label>
+                <input id="password2" class="form-control" type="password"/>
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div id="ErrorPassword" class="text-bg-danger mt-2"></div>
+            <div class="form-group">
+                <label asp-for="PhoneNumber" class="control-label" > Phone</label>
+                <input asp-for="PhoneNumber" class="form-control" type="number"/>
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" pattern="xyz@mail.com" placeholder="xyz@mail.com" type="email" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-3 text-center">
+                <input type="submit" value="Register" class="btn btn-primary col-md-3"/>
+                <input value="Cancel" class="btn btn-danger col-md-3" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
