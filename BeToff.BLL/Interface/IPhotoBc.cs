@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 
 namespace BeToff.BLL.Interface
 {
-    public interface IUserBc : IBeToffBc<User>
+    public interface IPhotoBc: IBeToffBc<Photo>
     {
-        public Task HashPasswordAndInsertUser(User user);
-        public Task<User> ComparePassword(Credentials credentials);
+        public Task<bool> SavePhoto(Photo photo);
+
+        public Task<List<Photo>> ListPhotoForSpecificUser(string IdAuthor);
     }
 }

@@ -1,0 +1,26 @@
+﻿@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-4">
+        <form asp-action="Login">
+            <h1>Sign In</h1>
+            <hr />
+            <div class="form-group">
+                <label for="Email" class="control-label"></label>
+                <input name="Email" class="form-control" placeholder="xyz@mail.com" type="email" required/>
+            </div>
+            <div class="form-group">
+                <label for="Password" class="control-label"></label>
+                <input name="Password" class="form-control" type="password" required />
+                <span class="fs-6 text-danger mt-2">@ViewData["ErrorMessage"]</span>
+            </div>
+            <div class="form-group mt-3 text-center">
+                <input type="submit" value="Sign In" class="btn btn-primary col-md-4" />
+                <a href="/User/register" class="btn btn-danger col-md-4"/>Register</a>
+            </div>
+        </form>
+    </div>
+</div>
+

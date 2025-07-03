@@ -5,22 +5,7 @@
       {
         "Path": "BeToff.Web\\BeToff.Web.csproj",
         "Action": "Start",
-        "DebugTarget": "http"
-      },
-      {
-        "Path": "BeToff.DAL\\BeToff.DAL.csproj",
-        "Action": "Start",
-        "DebugTarget": "BeToff.DAL"
-      },
-      {
-        "Path": "BeToff.BLL\\BeToff.BLL.csproj",
-        "Action": "Start",
-        "DebugTarget": "BeToff.BLL"
-      },
-      {
-        "Path": "BeToff.Entities\\BeToff.Entities.csproj",
-        "Action": "Start",
-        "DebugTarget": "BeToff.Entities"
+        "DebugTarget": "IIS Express"
       }
     ]
   }

@@ -1,0 +1,58 @@
+﻿@{
+    ViewData["Title"] = "AddPhoto";
+}
+
+<h1>AddPhoto</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form enctype="multipart/form-data" method="post" asp-controller="Photo" asp-action="AddPhoto" >
+            <div class="form-group mb-2">
+                <label for="Title" class="control-label">Title</label>
+                <input name="Title" class="form-control" required/>
+            </div>
+            <div class="form-group mt-2 mb-2">
+                <label class="control-label">Picture</label>
+                <input name="image" id="image" type="file" class="form-control mt-2" data-bs-toggle="tooltip" data-bs-placement="top"
+                       data-bs-custom-class="custom-tooltip"
+                       data-bs-title="The file's size must lower than 500 MB" />
+                <div class="progress mt-2 mb-2" id="progress" role="progressbar" aria-label="Success example" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar text-bg-success" id="progressBar" style="width: 0%">0%</div>
+                </div>
+                <span class="fs-6 text-danger mt-2">@ViewData["ErrorMessage"]</span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary col-md-4" />
+                <a asp-action="Index" class="btn btn-danger col-md-4" />Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.getElementById('image').addEventListener('change', function () {
+      const file = this.files[0];
+      const xhr = new XMLHttpRequest();
+      const formData = new FormData();
+
+      formData.append('file', file);
+
+      xhr.upload.onprogress = function (event) {
+        if (event.lengthComputable) {
+          const percent = (event.loaded / event.total) * 100;
+          console.log(percent);
+          const progressBar = document.getElementById('progressBar')
+          document.getElementById('progress').setAttribute("aria-valuenow", percent.toString());
+          progressBar.textContent = `${percent.toFixed(2)}%`;
+          progressBar.style.width = `${percent.toFixed(1)}%`;
+          console.log(`Progress: ${percent.toFixed(2)}%`);
+        }
+      };
+
+      xhr.open('POST', '/upload');
+      xhr.send(formData);
+    });
+</script>
+

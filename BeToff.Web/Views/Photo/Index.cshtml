@@ -1,0 +1,35 @@
+﻿@model PhotoListViewModel;
+@{
+}
+
+<div class="row mt-5 mb-3">
+    <a asp-action="AddPhoto" class="btn btn-danger col-md-4 mt-3" />Add Picture</a>
+    <table class="table table-secondary align-middle col-md-10">
+        <thead class="table-dark">
+            <tr>
+                <th>Title</th>
+                <th>Created</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        
+        <tbody class="table-group-divider">
+        @foreach (var item in Model.Items)
+        {
+            <tr>
+                <td>@item.Title</td>
+                <td>@item.DateCreation</td>
+                <td class="d-flex">
+                    <a href="#" class="btn btn-primary col-md-2">View</a>
+                    <a href="#" class="btn btn-success col-md-2">Update</a>
+                    <a href = "#" class="btn btn-danger col-md-2">Delete</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+
+
+
+

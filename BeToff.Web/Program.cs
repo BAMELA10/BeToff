@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using BeToff.BLL.Interface;
 using BeToff.BLL;
 using BeToff.DAL.Interface;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http.Features;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,9 +19,34 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<BeToffDbContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString(ConnectionString) ?? throw new InvalidOperationException("Connection string 'BeToffDbContext' not found."))
 );
-
+//builder.Services.AddTransient<IWebHostEnvironment, WebHostEnvironment>
 builder.Services.AddTransient<IUserDao, UserDao>();
 builder.Services.AddTransient<IUserBc, UserBc>();
+builder.Services.AddTransient<IPhotoDao, PhotoDao>();
+builder.Services.AddTransient<IPhotoBc, PhotoBc>();
+
+builder.WebHost.ConfigureKestrel(serverOptions =>
+{
+    serverOptions.Limits.MaxRequestBodySize = 512 * 1024 * 1024; //500 Mo en bytes
+});
+
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = 512 * 1024 * 1024; // 500 Mo en bytes
+});
+
+builder.Services.AddMemoryCache();
+//builder.Services.AddSession(opt =>
+//{
+//    opt.IdleTimeout = TimeSpan.FromDays(1);
+//    opt.Cookie.Expiration = TimeSpan.FromDays(1);
+//    opt.Cookie.HttpOnly = true;
+//    opt.Cookie.IsEssential = true;
+//}
+//);
+
+// Service for Authentification with Cookie
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
 
 
 
@@ -42,7 +69,7 @@ app.MapStaticAssets();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
+    pattern: "{controller=User}/{action=Login}/{id?}")
     .WithStaticAssets();
 
 

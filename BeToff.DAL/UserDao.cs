@@ -18,4 +18,14 @@ public class UserDao : BeToffDao, IUserDao
         return true;
 
     }
+
+    public async Task<User> GetUserByEmail(string Email)
+    {
+        var user = await _UserDB.Users.SingleOrDefaultAsync(item =>item.Email == Email);
+        if(user == null)
+        {
+            return null;
+        }
+        return user;
+    }
 }

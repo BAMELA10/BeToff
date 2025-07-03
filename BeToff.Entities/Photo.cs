@@ -7,7 +7,6 @@ public class Photo : BeToffEntity
 {
     [Required]
     [ForeignKey("Author")]
-    
     public Guid IdAuthor { get; set; }
 
     //[Column("Author")]
@@ -19,6 +18,9 @@ public class Photo : BeToffEntity
 
     [Required]
     public string Image {get; set;}
-    
+
+    [Required]
+    public string Title { get; set; }
+
     //public ICollection<Comment> Comments {get; set;}
 }

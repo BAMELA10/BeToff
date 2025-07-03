@@ -6,7 +6,7 @@ public class BeToffDbContext : DbContext
     public BeToffDbContext(DbContextOptions<BeToffDbContext> options) : base(options) { }
 
     public string ConnectionString { get; set; }
-    public BeToffDbContext(string connectionString) {
+    protected BeToffDbContext(string connectionString) {
         ConnectionString = connectionString;
     }
 
