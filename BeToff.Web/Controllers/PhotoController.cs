@@ -81,7 +81,7 @@ namespace BeToff.Web.Controllers
             {
                 Id = Guid.NewGuid(),
                 Title = Title,
-                IdAuthor = Guid.Parse(User.FindFirst("UserId")?.Value),
+                AuthorId = Guid.Parse(User.FindFirst("UserId")?.Value),
                 DateCreation = DateOnly.FromDateTime(DateTime.Now),
                 Image = PathFile
             };
@@ -108,12 +108,7 @@ namespace BeToff.Web.Controllers
                 FileName = FileName
             };
 
-            //string ImageServerAddress = "";
-
-            //string FileName = Path.GetFileName(model.Image);
-            //string FilePathOnServer = "Media/" + FileName;
-            //ImageServerAddress = $"~/{FilePathOnServer}";
-            //ViewData["scr"] = ImageServerAddress;
+            Console.WriteLine(result.Author.Email);
 
             return View(model);
         }

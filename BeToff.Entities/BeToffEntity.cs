@@ -5,7 +5,6 @@ namespace BeToff.Entities;
 
 public abstract class BeToffEntity 
 {
-    [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public Guid Id {get; set;}
 }

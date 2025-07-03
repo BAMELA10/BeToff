@@ -5,9 +5,10 @@ namespace BeToff.Entities;
 
 public class Photo : BeToffEntity
 {
+
     [Required]
-    [ForeignKey("Author")]
-    public Guid IdAuthor { get; set; }
+    [ForeignKey(nameof(Author))]
+    public Guid AuthorId { get; set; }
 
     //[Column("Author")]
     [DeleteBehavior(DeleteBehavior.Cascade)]
