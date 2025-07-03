@@ -3,6 +3,7 @@ using BeToff.Entities;
 using BeToff.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.Scripting.Hosting;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Extensions.Hosting;
 using System.ComponentModel;
@@ -87,6 +88,34 @@ namespace BeToff.Web.Controllers
 
             var result = await _photoBc.SavePhoto(photo);
             return RedirectToAction(nameof(Index));
+        }
+
+        //[HttpGet]
+        public async Task<IActionResult> DisplayPicture(string Id)
+        {
+            Photo result = await _photoBc.GetSpecificPhoto(Id);
+
+            if (result == null || string.IsNullOrEmpty(result.Image))
+            {
+                return NotFound(); // ou return View("Error"), ou un fallback
+            };
+
+            string FileName = Path.GetFileName(result.Image);
+
+            var model = new PhotoViewModel
+            {
+                Image = result,
+                FileName = FileName
+            };
+
+            //string ImageServerAddress = "";
+
+            //string FileName = Path.GetFileName(model.Image);
+            //string FilePathOnServer = "Media/" + FileName;
+            //ImageServerAddress = $"~/{FilePathOnServer}";
+            //ViewData["scr"] = ImageServerAddress;
+
+            return View(model);
         }
     }
 }

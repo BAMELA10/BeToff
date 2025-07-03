@@ -35,4 +35,13 @@ public class PhotoDao : BeToffDao, IPhotoDao
             .ToListAsync();
         return Result;
     }
+
+    public async Task<List<Photo>> GetPhotoById(Guid Id)
+    {
+        var result = await _PhotoDB.Photos
+            .Where(opt => opt.Id.Equals(Id))
+            .ToListAsync();
+
+        return result;
+    }
 }

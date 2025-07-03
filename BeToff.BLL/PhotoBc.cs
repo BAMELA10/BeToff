@@ -36,5 +36,12 @@ namespace BeToff.BLL
             return result;
         }
 
+        public async Task<Photo> GetSpecificPhoto(string Id)
+        {
+            Guid ID = Guid.Parse(Id);
+            var result = await _photoDao.GetPhotoById(ID);
+            return result.First();
+        }
+
     }
 }

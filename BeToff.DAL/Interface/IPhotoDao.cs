@@ -6,6 +6,8 @@ public interface IPhotoDao : IBetoff<Photo>
 {
     
     public Task<bool> CreatePhoto(Photo photo);
+
+    public Task<List<Photo>> GetPhotoById(Guid Id);
     public Task<List<Photo>> GetPhotoByAuthor(Guid author);
 
 }

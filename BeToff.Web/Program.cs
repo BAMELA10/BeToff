@@ -6,6 +6,7 @@ using BeToff.BLL;
 using BeToff.DAL.Interface;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.Extensions.FileProviders;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -66,6 +67,20 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapStaticAssets();
+
+app.UseFileServer();
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(Path.Combine(builder.Environment.WebRootPath, "Media/")),
+    RequestPath = "/Media",
+
+    OnPrepareResponse = ctx =>
+    {
+        ctx.Context.Response.Headers.Append(
+            "Cache-Control", "no-store, no-cache, must-revalidate");
+        ctx.Context.Response.Headers.Append("Pragma", "no-cache");
+    }
+});
 
 app.MapControllerRoute(
     name: "default",
