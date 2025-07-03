@@ -20,7 +20,7 @@
                 <td>@item.Title</td>
                 <td>@item.DateCreation</td>
                 <td class="d-flex">
-                    <a href="#" class="btn btn-primary col-md-2">View</a>
+                    <a asp-action="DisplayPicture" asp-route-id="@item.Id" class="btn btn-primary col-md-2">View</a>
                     <a href="#" class="btn btn-success col-md-2">Update</a>
                     <a href = "#" class="btn btn-danger col-md-2">Delete</a>
                 </td>
