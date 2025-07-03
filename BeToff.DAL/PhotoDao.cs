@@ -31,7 +31,8 @@ public class PhotoDao : BeToffDao, IPhotoDao
     public async Task<List<Photo>> GetPhotoByAuthor(Guid author)
     {
         var Result = await _PhotoDB.Photos
-            .Where(opt => opt.IdAuthor == author)
+            .Include(p => p.Author)
+            .Where(opt => opt.AuthorId == author)
             .ToListAsync();
         return Result;
     }
@@ -39,6 +40,7 @@ public class PhotoDao : BeToffDao, IPhotoDao
     public async Task<List<Photo>> GetPhotoById(Guid Id)
     {
         var result = await _PhotoDB.Photos
+            .Include(p => p.Author)
             .Where(opt => opt.Id.Equals(Id))
             .ToListAsync();
 

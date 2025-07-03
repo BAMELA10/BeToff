@@ -4,6 +4,7 @@ using BeToff.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BeToff.Entities.Migrations
 {
     [DbContext(typeof(BeToffDbContext))]
-    partial class BeToffDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250703220534_Update3")]
+    partial class Update3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -87,11 +90,11 @@ namespace BeToff.Entities.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("AuthorId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateOnly>("DateCreation")
                         .HasColumnType("date");
+
+                    b.Property<Guid>("IdAuthor")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Image")
                         .IsRequired()
@@ -103,7 +106,7 @@ namespace BeToff.Entities.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AuthorId");
+                    b.HasIndex("IdAuthor");
 
                     b.ToTable("Photos");
                 });
@@ -188,7 +191,7 @@ namespace BeToff.Entities.Migrations
                 {
                     b.HasOne("BeToff.Entities.User", "Author")
                         .WithMany("Photos")
-                        .HasForeignKey("AuthorId")
+                        .HasForeignKey("IdAuthor")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
