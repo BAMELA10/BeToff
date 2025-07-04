@@ -10,4 +10,6 @@ public interface IPhotoDao : IBetoff<Photo>
     public Task<List<Photo>> GetPhotoById(Guid Id);
     public Task<List<Photo>> GetPhotoByAuthor(Guid author);
 
+    public Task<bool> DeleteById(Guid Id);
+
 }

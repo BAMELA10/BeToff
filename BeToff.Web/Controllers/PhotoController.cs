@@ -90,9 +90,13 @@ namespace BeToff.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        //[HttpGet]
+        
         public async Task<IActionResult> DisplayPicture(string Id)
         {
+            if (String.IsNullOrEmpty(Id))
+            {
+                return NotFound();
+            }
             Photo result = await _photoBc.GetSpecificPhoto(Id);
 
             if (result == null || string.IsNullOrEmpty(result.Image))
@@ -108,9 +112,36 @@ namespace BeToff.Web.Controllers
                 FileName = FileName
             };
 
-            Console.WriteLine(result.Author.Email);
-
             return View(model);
+        }
+
+        public async Task<IActionResult> DeletePicture(string Id)
+        {
+            if (String.IsNullOrEmpty(Id))
+            {
+                return NotFound();
+            };
+
+            var result = await _photoBc.GetSpecificPhoto(Id);
+
+            if (result == null)
+            {
+                return NotFound();
+            }
+
+            string filePath = result.Image;
+
+            if (System.IO.File.Exists(filePath))
+            {
+                System.IO.File.Delete(filePath);
+            }
+            else
+            {
+                return NotFound();
+            }
+
+            await _photoBc.DeleteSpecificPhoto(Id);
+            return RedirectToAction(nameof(Index));
         }
     }
 }

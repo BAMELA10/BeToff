@@ -46,4 +46,19 @@ public class PhotoDao : BeToffDao, IPhotoDao
 
         return result;
     }
+
+    public async Task<bool> DeleteById(Guid Id)
+    {
+        var result = await _PhotoDB.Photos
+            .Where(opt => opt.Id.Equals(Id))
+            .ExecuteDeleteAsync();
+
+        if(result == 1)
+        {
+            _PhotoDB.SaveChanges();
+            return true;
+        }
+        return false;
+            
+    }
 }
