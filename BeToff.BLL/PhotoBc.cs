@@ -43,5 +43,11 @@ namespace BeToff.BLL
             return result.First();
         }
 
+        public async Task DeleteSpecificPhoto(string Id)
+        {
+            Guid ID = Guid.Parse(Id);
+            await _photoDao.DeleteById(ID);
+        }
+
     }
 }
