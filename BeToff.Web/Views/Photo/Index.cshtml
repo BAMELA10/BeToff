@@ -20,15 +20,46 @@
                 <td>@item.Title</td>
                 <td>@item.DateCreation</td>
                 <td class="d-flex">
-                    <a href="#" class="btn btn-primary col-md-2">View</a>
-                    <a href="#" class="btn btn-success col-md-2">Update</a>
-                    <a href = "#" class="btn btn-danger col-md-2">Delete</a>
+                    <a asp-action="DisplayPicture" asp-route-id="@item.Id" class="btn btn-primary col-md-2">View</a>
+                    <button id="showmodal" type="button" class="btn btn-danger col-md-2" data-bs-toggle="modal" data-id="@item.Id" data-bs-target="#DeleteModal">Delete</button>
                 </td>
             </tr>
         }
         </tbody>
     </table>
 </div>
+
+<div class="modal fade" id="DeleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Do you really to delete this items?
+            </div>
+            <div class="modal-footer">
+                <form id="deleteForm" method="post">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-danger">Confirm</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var modal = document.querySelector('#DeleteModal');
+    console.log(modal);
+    modal.addEventListener('show.bs.modal', (event) => {
+        const button = document.querySelector("#showmodal");
+        const id = button.getAttribute('data-id');
+        console.log(id);
+        const form = document.querySelector("#deleteForm");
+        form.setAttribute("action", `/Photo/DeletePicture/${id}`);
+    })
+</script>
 
 
 

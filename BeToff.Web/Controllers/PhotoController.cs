@@ -3,6 +3,7 @@ using BeToff.Entities;
 using BeToff.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.Scripting.Hosting;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Extensions.Hosting;
 using System.ComponentModel;
@@ -80,12 +81,66 @@ namespace BeToff.Web.Controllers
             {
                 Id = Guid.NewGuid(),
                 Title = Title,
-                IdAuthor = Guid.Parse(User.FindFirst("UserId")?.Value),
+                AuthorId = Guid.Parse(User.FindFirst("UserId")?.Value),
                 DateCreation = DateOnly.FromDateTime(DateTime.Now),
                 Image = PathFile
             };
 
             var result = await _photoBc.SavePhoto(photo);
+            return RedirectToAction(nameof(Index));
+        }
+
+        
+        public async Task<IActionResult> DisplayPicture(string Id)
+        {
+            if (String.IsNullOrEmpty(Id))
+            {
+                return NotFound();
+            }
+            Photo result = await _photoBc.GetSpecificPhoto(Id);
+
+            if (result == null || string.IsNullOrEmpty(result.Image))
+            {
+                return NotFound(); // ou return View("Error"), ou un fallback
+            };
+
+            string FileName = Path.GetFileName(result.Image);
+
+            var model = new PhotoViewModel
+            {
+                Image = result,
+                FileName = FileName
+            };
+
+            return View(model);
+        }
+
+        public async Task<IActionResult> DeletePicture(string Id)
+        {
+            if (String.IsNullOrEmpty(Id))
+            {
+                return NotFound();
+            };
+
+            var result = await _photoBc.GetSpecificPhoto(Id);
+
+            if (result == null)
+            {
+                return NotFound();
+            }
+
+            string filePath = result.Image;
+
+            if (System.IO.File.Exists(filePath))
+            {
+                System.IO.File.Delete(filePath);
+            }
+            else
+            {
+                return NotFound();
+            }
+
+            await _photoBc.DeleteSpecificPhoto(Id);
             return RedirectToAction(nameof(Index));
         }
     }

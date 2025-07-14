@@ -5,7 +5,7 @@ namespace BeToff.Entities;
 
 public class User : BeToffEntity
 {
-    
+
     public string? FirstName {get; set;}
 
     [Required]
@@ -30,7 +30,9 @@ public class User : BeToffEntity
     [DefaultValue(false)]
     public bool? IsActive {get; set;}
 
+    public ICollection<Photo> Photos { get;} = new List<Photo>();
+
     //public ICollection<Familly>? Famillies {get; set;}
-    //public ICollection<Photo>? Photos {get; set;}
+
     //public ICollection<Comment>? Comments {get; set;}
 }

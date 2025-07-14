@@ -36,5 +36,18 @@ namespace BeToff.BLL
             return result;
         }
 
+        public async Task<Photo> GetSpecificPhoto(string Id)
+        {
+            Guid ID = Guid.Parse(Id);
+            var result = await _photoDao.GetPhotoById(ID);
+            return result.First();
+        }
+
+        public async Task DeleteSpecificPhoto(string Id)
+        {
+            Guid ID = Guid.Parse(Id);
+            await _photoDao.DeleteById(ID);
+        }
+
     }
 }

@@ -12,5 +12,10 @@ namespace BeToff.BLL.Interface
         public Task<bool> SavePhoto(Photo photo);
 
         public Task<List<Photo>> ListPhotoForSpecificUser(string IdAuthor);
+
+        public Task<Photo> GetSpecificPhoto(string Id);
+
+        public Task DeleteSpecificPhoto(string Id);
+
     }
 }
