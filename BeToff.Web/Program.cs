@@ -24,6 +24,8 @@ builder.Services.AddTransient<IUserDao, UserDao>();
 builder.Services.AddTransient<IUserBc, UserBc>();
 builder.Services.AddTransient<IPhotoDao, PhotoDao>();
 builder.Services.AddTransient<IPhotoBc, PhotoBc>();
+builder.Services.AddTransient<IFamillyDao, FamillyDao>();
+builder.Services.AddTransient<IFamillyBc, FamillyBc>();
 
 builder.WebHost.ConfigureKestrel(serverOptions =>
 {

@@ -23,7 +23,6 @@ public class Familly : BeToffEntity
     public User CreatedBy { get; set; }
 
     [ForeignKey("Headof")]
-    
     public Guid IdHead { get; set; }
 
     [Column("HeadOfFamilly")]
