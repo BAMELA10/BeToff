@@ -1,0 +1,38 @@
+﻿@model IEnumerable<BeToff.Entities.Familly>
+
+@{
+    ViewData["Title"] = "Familly";
+}
+
+<h1>Familly</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+
+<table>
+    <thead>
+        <th>
+            Famillies
+        </th>
+        <th>
+            Actions
+        </th>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            @if (item.IdHead.Equals(ViewData["UserId"]))
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>
+                        <a class="btn btn-button-primary" href="#">Select</a>
+                        <a class="btn btn-button-primary" href="#">Details</a>
+                    </td>
+                </tr>
+            }
+       }
+    </tbody>
+</table>
