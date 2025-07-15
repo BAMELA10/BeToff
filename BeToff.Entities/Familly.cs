@@ -29,5 +29,9 @@ public class Familly : BeToffEntity
     [DeleteBehavior(DeleteBehavior.NoAction)]
     public User Headof {get; set;}
 
+    public IEnumerable<User> Members { get; set; } = new List<User>();
+
+    public IEnumerable<Registration> Registrations { get; set; } = new List<Registration>();
+
 
 }

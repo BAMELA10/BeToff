@@ -11,7 +11,7 @@ namespace BeToff.BLL.Interface
     public interface IFamillyBc : IBeToffBc<Familly>
     {
         Task<Familly> SelectFamilly(string FamillyId);
-        Task SaveFamilly(string NameOfFamilly, string CurrentUserId);
+        Task<Guid> SaveFamilly(string NameOfFamilly, string CurrentUserId);
         Task<List<Familly>> SelectFamillyByHead(string IdHead);
     }
 }

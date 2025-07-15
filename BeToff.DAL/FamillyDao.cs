@@ -31,7 +31,7 @@ public class FamillyDao : BeToffDao, IFamillyDao
     }
 
 
-    public async Task CreateFamilly(string NameOfFamilly, Guid UserId)
+    public async Task<Guid> CreateFamilly(string NameOfFamilly, Guid UserId)
     {
         Familly familly = new Familly();
 
@@ -41,6 +41,12 @@ public class FamillyDao : BeToffDao, IFamillyDao
         familly.DateCreation = DateOnly.FromDateTime(DateTime.Now);
         
         await _FamillyDb.AddAsync(familly);
-        _FamillyDb.SaveChanges();
+        await _FamillyDb.SaveChangesAsync();
+
+        Guid generetedId = familly.Id;
+
+        return generetedId;
+
+
     }
 }

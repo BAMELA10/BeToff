@@ -32,7 +32,13 @@ public class User : BeToffEntity
 
     public ICollection<Photo> Photos { get;} = new List<Photo>();
 
-    //public ICollection<Familly>? Famillies {get; set;}
+    public IEnumerable<Familly> Famillies { get; set; } = new List<Familly>();
+
+    public IEnumerable<Familly> FamilliesHeadof { get; set; } = new List<Familly>();
+
+    public IEnumerable<Familly> FamilliesCreator { get; set; } = new List<Familly>();
+
+    public IEnumerable<Registration> Registrations { get; set; } = new List<Registration>();
 
     //public ICollection<Comment>? Comments {get; set;}
 }
