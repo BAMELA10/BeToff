@@ -7,4 +7,5 @@ public interface IFamillyDao: IBetoff<Familly>
     Task<List<Familly>> GetFamillyByIdHead(Guid IdHead);
     Task<Familly> GetFamillyById(Guid FamillyId);
 
+
 }

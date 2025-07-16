@@ -40,5 +40,10 @@ public class User : BeToffEntity
 
     public IEnumerable<Registration> Registrations { get; set; } = new List<Registration>();
 
+    public IEnumerable<Invitation> InvitationsSender { get; set; } = new List<Invitation>();
+
+    public IEnumerable<Invitation> InvitationsReceiver { get; set; } = new List<Invitation>();
+
+
     //public ICollection<Comment>? Comments {get; set;}
 }
