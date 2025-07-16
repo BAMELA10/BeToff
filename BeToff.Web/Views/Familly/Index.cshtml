@@ -1,4 +1,4 @@
-﻿@model IEnumerable<BeToff.Entities.Familly>
+﻿@model BeToff.Web.Models.FamillyViewModel
 
 @{
     ViewData["Title"] = "Familly";
@@ -7,12 +7,13 @@
 <h1>Familly</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    @* <a asp-action="Create">Create New</a> *@
+    <button id="showmodal" type="button" class="btn btn-danger col-md-2" data-bs-toggle="modal" data-bs-target="#createModal">Create</button>
 </p>
 
 
-<table>
-    <thead>
+<table class="table table-secondary align-middle col-md-10">
+    <thead class="table-dark">
         <th>
             Famillies
         </th>
@@ -20,19 +21,62 @@
             Actions
         </th>
     </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            @if (item.IdHead.Equals(ViewData["UserId"]))
-            {
-                <tr>
-                    <td>@item.Name</td>
-                    <td>
-                        <a class="btn btn-button-primary" href="#">Select</a>
-                        <a class="btn btn-button-primary" href="#">Details</a>
-                    </td>
-                </tr>
-            }
+    <tbody class="table-group-divider">
+        @foreach (var item in Model.famillies)
+        {   
+            <tr>
+                <td>@item.Name</td>
+                <td>
+                    <a class="btn btn-primary" href="#">Select</a>
+                    <a class="btn btn-success" href="#">Details</a>
+                </td>
+            </tr>
        }
     </tbody>
 </table>
+
+
+<div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <form id="form" onsubmit=" return CheckEntry()" asp-action="Create">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group mt-2 mb-2">
+                        <label for="NameOfFamilly" class="control-label">Name of familly</label>
+                        <input id="NameOfFamilly" type="text" name="NameOfFamilly" class="form-control mt-2" required />
+                        <span class="fs-6 text-danger mt-2" id="ErrorMessage" style="display:none">'Fill the Entry for this action</span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" Id="submit" class="btn btn-danger">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    function CheckEntry () {
+        const input = document.getElementById('NameOfFamilly');
+        const value  = input.value;
+        const cleanInput = value.trim();
+        const Error = document.getElementById('ErrorMessage');
+
+        if(value && cleanInput.length != 0)
+        {
+            return true
+        }
+        else
+        {
+            Error.style.display = "block";
+            return false
+
+        }
+    }
+
+</script>

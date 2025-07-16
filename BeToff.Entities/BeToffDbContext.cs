@@ -15,6 +15,8 @@ public class BeToffDbContext : DbContext
     public DbSet<Photo> Photos {get; set;}
     public DbSet<Comment> Comments {get; set;}
 
+    public DbSet<Registration> Registration { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         base.OnConfiguring(optionsBuilder);
@@ -28,6 +30,25 @@ public class BeToffDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<User>()
+            .HasMany(e => e.FamilliesCreator)
+            .WithOne(e => e.CreatedBy)
+            .HasForeignKey(e => e.IdCreator);
+
+        modelBuilder.Entity<User>()
+            .HasMany(e => e.FamilliesHeadof)
+            .WithOne(e => e.Headof)
+            .HasForeignKey(e => e.IdHead);
+
+        modelBuilder.Entity<User>()
+            .HasMany(e => e.Famillies)
+            .WithMany(e => e.Members)
+            .UsingEntity<Registration>(
+                r => r.HasOne<Familly>(e => e.Familly).WithMany(e => e.Registrations),
+                l => l.HasOne<User>(e => e.User).WithMany(e => e.Registrations)
+            );
+
     }
 
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)

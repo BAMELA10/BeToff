@@ -31,10 +31,11 @@ namespace BeToff.BLL
             return await _famillyDao.GetFamillyByIdHead(Id);
         }
 
-        public async Task SaveFamilly(string NameOfFamilly, string CurrentUserId)
+        public async Task<Guid> SaveFamilly(string NameOfFamilly, string CurrentUserId)
         {
             Guid UserId = Guid.Parse(CurrentUserId);
-            await _famillyDao.CreateFamilly(NameOfFamilly, UserId);  
+            Guid Familly = await _famillyDao.CreateFamilly(NameOfFamilly, UserId);
+            return Familly;
 
         }
     }
