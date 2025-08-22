@@ -38,5 +38,23 @@ namespace BeToff.DAL
 
             return registration;
         }
+
+        public async Task<List<Registration>> GetRegistrationByFamilly(Guid FamillyId)
+        {
+            var ListRegis = await _db.Registration
+                .Where(x => x.FamillyId.Equals(FamillyId))
+                .ToListAsync();
+            return ListRegis;
+        }
+
+        public async Task<Task> DeleteRegistration(Guid FamillyId, Guid MemberId)
+        {
+            var Regis = await _db.Registration
+                .Where(x => x.FamillyId.Equals(FamillyId))
+                .Where(s => s.UserId.Equals(MemberId))
+                .ExecuteDeleteAsync(); 
+
+            return Task.CompletedTask;
+        }
     }
 }

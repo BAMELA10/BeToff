@@ -11,5 +11,9 @@ namespace BeToff.DAL.Interface
     {
         public Task AddRegistration(Guid FamillyId, Guid MemberId);
         public Task<Registration> GetRegistrationByFamillyAndUser(Guid FamillyId, Guid MemberId);
+        public Task<List<Registration>> GetRegistrationByFamilly(Guid FamillyId);
+        public Task<Task> DeleteRegistration(Guid FamillyId, Guid MemberId);
+
     }
+
 }

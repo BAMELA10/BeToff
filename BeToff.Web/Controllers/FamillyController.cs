@@ -36,6 +36,7 @@ namespace BeToff.Web.Controllers
         }
 
 
+
         public ActionResult Album ()
         {
             return View();
@@ -54,6 +55,50 @@ namespace BeToff.Web.Controllers
             var Items = await _famillyBc.SelectFamilly(id);
             return View(Items);
         }
+
+        public async Task<ActionResult> Home(string Id)
+        {
+            var FamilyItem = await _famillyBc.SelectFamilly(Id);
+            var model = new FamillyViewModel
+            {
+                Familly = FamilyItem,
+            };
+            return View(model);
+        }
+
+        [Route("Familly/{Id}/Members")]
+        public async Task<ActionResult> Members(string Id)
+        {
+            //Get every members of the familly
+            //affect that list to his viewmodel for print it
+            return View();
+        }
+
+        [Route("Familly/{Id}/RemoveMember/{MemberId}")]
+        public async Task<ActionResult> RemoveMember(string Id, string MemberId)
+        {
+            //apply the function for delete a registration for a specific member
+            //redirect to member views
+            return View();
+        }
+
+        [Route("Familly/{Id}/DefineHead/{MemberId}")]
+        public async Task<ActionResult> DefineHead(string Id, string MemberId)
+        {
+            //apply the function for Change the familly's head
+            //redirect to member views
+            return View();
+        }
+
+        [Route("Familly/{Id}/Exit")]
+        public async Task<ActionResult> Exit(string Id)
+        {
+            string CurrentUser = User.FindFirst("UserId")?.Value;
+            //apply the function for delete a registration for a specific member
+            //redirect to member views
+            return View();
+        }
+
 
 
         [HttpPost]
