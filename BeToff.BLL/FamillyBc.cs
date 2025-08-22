@@ -21,7 +21,11 @@ namespace BeToff.BLL
 
         public async Task<Familly> SelectFamilly(string FamillyId)
         {
+            Console.WriteLine(FamillyId);
             Guid Id = Guid.Parse(FamillyId);
+            if (Id == Guid.Empty) {
+                throw new Exception("Vide");
+            }
             return await _famillyDao.GetFamillyById(Id);
         }
 
@@ -37,6 +41,11 @@ namespace BeToff.BLL
             Guid Familly = await _famillyDao.CreateFamilly(NameOfFamilly, UserId);
             return Familly;
 
+        }
+
+        public Task<Task> ChangeHeadOfFamilly(Guid FamillyId, Guid UserId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

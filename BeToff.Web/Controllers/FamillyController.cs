@@ -24,12 +24,11 @@ namespace BeToff.Web.Controllers
         {
 
             string CurrentUserId = User.FindFirst("UserId").Value;
-            //ViewData["UserId"] = CurrentUserId;
-            var Data = await _famillyBc.SelectFamillyByHead(CurrentUserId);
+            var Data = await _registrationBc.ListOfRegistrationForUser(CurrentUserId);
 
-            var model = new FamillyViewModel()
+            var model = new RegistrationViewModel()
             {
-                famillies = Data,
+                Registrations = Data,
             };
 
             return View(model);
@@ -56,8 +55,10 @@ namespace BeToff.Web.Controllers
             return View(Items);
         }
 
+        [Route("Familly/{Id}/Home")]
         public async Task<ActionResult> Home(string Id)
         {
+            Console.WriteLine(Id);
             var FamilyItem = await _famillyBc.SelectFamilly(Id);
             var model = new FamillyViewModel
             {
@@ -69,35 +70,41 @@ namespace BeToff.Web.Controllers
         [Route("Familly/{Id}/Members")]
         public async Task<ActionResult> Members(string Id)
         {
-            //Get every members of the familly
+            string CurrentUser = User.FindFirst("UserId")!.Value;
+            ViewData["CurrentUser"] = CurrentUser;
+            var AllFamillyMember = await _registrationBc.ListOfRegistrationForFamilly(Id);
+            var model = new RegistrationViewModel
+            {
+                Registrations = AllFamillyMember
+            };
             //affect that list to his viewmodel for print it
-            return View();
+            return View(model);
         }
 
-        [Route("Familly/{Id}/RemoveMember/{MemberId}")]
-        public async Task<ActionResult> RemoveMember(string Id, string MemberId)
-        {
-            //apply the function for delete a registration for a specific member
-            //redirect to member views
-            return View();
-        }
+        //[Route("Familly/{Id}/RemoveMember/{MemberId}")]
+        //public async Task<ActionResult> RemoveMember(string Id, string MemberId)
+        //{
+        //    //apply the function for delete a registration for a specific member
+        //    //redirect to member views
+        //    return View();
+        //}
 
-        [Route("Familly/{Id}/DefineHead/{MemberId}")]
-        public async Task<ActionResult> DefineHead(string Id, string MemberId)
-        {
-            //apply the function for Change the familly's head
-            //redirect to member views
-            return View();
-        }
+        //[Route("Familly/{Id}/DefineHead/{MemberId}")]
+        //public async Task<ActionResult> DefineHead(string Id, string MemberId)
+        //{
+        //    //apply the function for Change the familly's head
+        //    //redirect to member views
+        //    return View();
+        //}
 
-        [Route("Familly/{Id}/Exit")]
-        public async Task<ActionResult> Exit(string Id)
-        {
-            string CurrentUser = User.FindFirst("UserId")?.Value;
-            //apply the function for delete a registration for a specific member
-            //redirect to member views
-            return View();
-        }
+        //[Route("Familly/{Id}/Exit")]
+        //public async Task<ActionResult> Exit(string Id)
+        //{
+        //    string CurrentUser = User.FindFirst("UserId")?.Value;
+        //    //apply the function for delete a registration for a specific member
+        //    //redirect to member views
+        //    return View();
+        //}
 
 
 

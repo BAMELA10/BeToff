@@ -43,6 +43,8 @@ namespace BeToff.DAL
         {
             var ListRegis = await _db.Registration
                 .Where(x => x.FamillyId.Equals(FamillyId))
+                .Include(x => x.Familly)
+                .Include(y => y.User)
                 .ToListAsync();
             return ListRegis;
         }
@@ -55,6 +57,16 @@ namespace BeToff.DAL
                 .ExecuteDeleteAsync(); 
 
             return Task.CompletedTask;
+        }
+
+        public async Task<List<Registration>> GetRegistrationByUser(Guid UserId)
+        {
+            var ListRegis = await _db.Registration
+                .Where(x => x.UserId.Equals(UserId))
+                .Include(x => x.Familly)
+                .Include(y => y.User)
+                .ToListAsync();
+            return ListRegis;
         }
     }
 }

@@ -1,0 +1,46 @@
+﻿@model BeToff.Web.Models.RegistrationViewModel;
+@{
+    ViewData["Title"] = "Members";
+}
+
+<h1>Members</h1>
+
+<a class="btn btn-outline-danger" href="#">Exit of Familly</a>
+<table class="table table-secondary align-middle col-md-10">
+    <thead class="table-dark">
+    <th>
+        Full Name
+    </th>
+    <th>
+        Date Of Registration
+    </th>
+    <th>
+        Family
+    </th>
+    <th>
+        Actions
+    </th>
+    </thead>
+    <tbody class="table-group-divider" id="Received">
+        @foreach (var item in Model.Registrations)
+        {
+            <tr>
+                <td>@item.UserRegistered</td>
+                <td>@item.DateOfregistation</td>
+                <td>@item.FamillyConcerned</td>
+                @if (item.FamillyHeadId.ToString().Equals(ViewData["CurrentUser"]))
+                {
+                    <td>
+                        <a class="btn btn-primary" href="#">Define Head</a>
+                        <a class="btn btn-success" href="#">Remove</a>
+                    </td>
+                }
+                else
+                {
+                    <td> No Action Available</td>
+                }
+
+            </tr>
+        }
+    </tbody>
+</table>
