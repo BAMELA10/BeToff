@@ -81,13 +81,15 @@ namespace BeToff.Web.Controllers
             return View(model);
         }
 
-        //[Route("Familly/{Id}/RemoveMember/{MemberId}")]
-        //public async Task<ActionResult> RemoveMember(string Id, string MemberId)
-        //{
-        //    //apply the function for delete a registration for a specific member
-        //    //redirect to member views
-        //    return View();
-        //}
+        [Route("Familly/{Id}/RemoveMember/{MemberId}")]
+        public async Task<ActionResult> RemoveMember(string Id, string MemberId)
+        {
+            string CurrentUser = User.FindFirst("UserId")!.Value;
+            //apply the function for delete a registration for a specific member
+            await _registrationBc.RemoveSpecificFamillyMember(Id, MemberId, CurrentUser);
+            //redirect to member views
+            return RedirectToAction("Members", new { Id = Id, MemberId = MemberId });
+        }
 
         //[Route("Familly/{Id}/DefineHead/{MemberId}")]
         //public async Task<ActionResult> DefineHead(string Id, string MemberId)

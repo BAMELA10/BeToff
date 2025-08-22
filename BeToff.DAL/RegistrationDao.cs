@@ -34,6 +34,8 @@ namespace BeToff.DAL
             var registration = await _db.Registration
                 .Where(x => x.FamillyId.Equals(FamillyId))
                 .Where(s => s.UserId.Equals(MemberId))
+                .Include(x => x.Familly)
+                .Include(y => y.User)
                 .FirstOrDefaultAsync();
 
             return registration;

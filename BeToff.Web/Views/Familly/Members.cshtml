@@ -5,21 +5,21 @@
 
 <h1>Members</h1>
 
-<a class="btn btn-outline-danger" href="#">Exit of Familly</a>
+
 <table class="table table-secondary align-middle col-md-10">
     <thead class="table-dark">
-    <th>
-        Full Name
-    </th>
-    <th>
-        Date Of Registration
-    </th>
-    <th>
-        Family
-    </th>
-    <th>
-        Actions
-    </th>
+        <th>
+            Full Name
+        </th>
+        <th>
+            Date Of Registration
+        </th>
+        <th>
+            Family
+        </th>
+        <th>
+            Actions
+        </th>
     </thead>
     <tbody class="table-group-divider" id="Received">
         @foreach (var item in Model.Registrations)
@@ -31,13 +31,28 @@
                 @if (item.FamillyHeadId.ToString().Equals(ViewData["CurrentUser"]))
                 {
                     <td>
-                        <a class="btn btn-primary" href="#">Define Head</a>
-                        <a class="btn btn-success" href="#">Remove</a>
+                        @if (item.UserRegisteredId.ToString().Equals(ViewData["CurrentUser"]))
+                        {
+                            <a class="btn btn-outline-danger" href="#">Exit</a>
+                        }
+                        else
+                        {
+                            <a class="btn btn-primary" href="#">Define Head</a>
+                            <a class="btn btn-success" asp-action="RemoveMember" asp-route-id="@item.FamillyConcernedId" asp-route-MemberId="@item.UserRegisteredId">Remove</a>
+                        }
                     </td>
                 }
                 else
                 {
-                    <td> No Action Available</td>
+                    @if (item.UserRegisteredId.ToString().Equals(ViewData["CurrentUser"]))
+                    {
+                        <td><a class="btn btn-outline-danger" href="#">Exit</a></td>
+                    }
+                    else
+                    {
+                        <td> No Action Available</td>
+                    }
+                    
                 }
 
             </tr>
