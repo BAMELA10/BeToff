@@ -10,8 +10,10 @@ namespace BeToff.BLL.Interface
 {
     public interface IFamillyBc : IBeToffBc<Familly>
     {
-        Task<Familly> SelectFamilly(string FamillyId);
-        Task<Guid> SaveFamilly(string NameOfFamilly, string CurrentUserId);
-        Task<List<Familly>> SelectFamillyByHead(string IdHead);
+        public Task<Familly> SelectFamilly(string FamillyId);
+        public Task<Guid> SaveFamilly(string NameOfFamilly, string CurrentUserId);
+        public Task<List<Familly>> SelectFamillyByHead(string IdHead);
+
+        public Task<Task> ChangeHeadOfFamilly(Guid FamillyId, Guid UserId);
     }
 }

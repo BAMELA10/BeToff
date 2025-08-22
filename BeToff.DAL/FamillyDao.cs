@@ -49,4 +49,23 @@ public class FamillyDao : BeToffDao, IFamillyDao
 
 
     }
+
+    public async Task<Task> ChangeHeadOfFamilly(Guid FamillyId, Guid UserId)
+    {
+        var item = await _FamillyDb.Famillies
+            .Where(x => x.Id.Equals(FamillyId))
+            .FirstOrDefaultAsync();
+
+        if(item.IdHead == UserId)
+        {
+            return Task.CompletedTask;
+        }
+
+        item.IdHead = UserId;
+
+        _FamillyDb.Famillies.Update(item);
+        await _FamillyDb.SaveChangesAsync();
+
+        return Task.CompletedTask;
+    }
 }
