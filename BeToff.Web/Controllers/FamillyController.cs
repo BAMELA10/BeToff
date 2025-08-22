@@ -1,8 +1,11 @@
 ﻿using BeToff.BLL.Interface;
+using BeToff.BLL.Service.Interface;
 using BeToff.Entities;
+using BeToff.Web.Hubs;
 using BeToff.Web.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore.Query.Internal;
 
 namespace BeToff.Web.Controllers
@@ -33,7 +36,14 @@ namespace BeToff.Web.Controllers
         }
 
 
-
+        public ActionResult Album ()
+        {
+            return View();
+        }
+        //public async Task<ActionResult> Album (string Id)
+        //{
+        //    //
+        //}
         public ActionResult Details()
         {
             return View();
@@ -64,6 +74,8 @@ namespace BeToff.Web.Controllers
                 return View(nameof(Index));
             }
         }
+
+        
 
     }
 }

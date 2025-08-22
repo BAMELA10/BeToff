@@ -10,5 +10,6 @@ namespace BeToff.DAL.Interface
     public interface IRegistrationDao : IBetoff<Registration>
     {
         public Task AddRegistration(Guid FamillyId, Guid MemberId);
+        public Task<Registration> GetRegistrationByFamillyAndUser(Guid FamillyId, Guid MemberId);
     }
 }

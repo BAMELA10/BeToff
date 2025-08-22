@@ -7,6 +7,10 @@ using BeToff.DAL.Interface;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.FileProviders;
+using BeToff.BLL.Service.Impl;
+using BeToff.BLL.Service.Interface;
+using BeToff.Web.Hubs;
+using BeToff.Web.WebServices;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,13 +18,14 @@ string ConnectionString = "BeToffDbContext";
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-
+builder.Services.AddSignalR();
 
 // Loading Databases (DI)
 builder.Services.AddDbContext<BeToffDbContext>(
     options => options.UseSqlServer(builder.Configuration.GetConnectionString(ConnectionString) ?? throw new InvalidOperationException("Connection string 'BeToffDbContext' not found."))
 );
-//builder.Services.AddTransient<IWebHostEnvironment, WebHostEnvironment>
+
+
 builder.Services.AddTransient<IUserDao, UserDao>();
 builder.Services.AddTransient<IUserBc, UserBc>();
 builder.Services.AddTransient<IPhotoDao, PhotoDao>();
@@ -29,6 +34,9 @@ builder.Services.AddTransient<IFamillyDao, FamillyDao>();
 builder.Services.AddTransient<IFamillyBc, FamillyBc>();
 builder.Services.AddTransient<IRegistrationDao, RegistrationDao>();
 builder.Services.AddTransient<IRegistrationBc, RegistrationBc>();
+builder.Services.AddTransient<IInvitationDao, InvitationDao>();
+builder.Services.AddTransient<IUserInvitationService, UserInvitationService>();
+builder.Services.AddHostedService<WebBackgroundService>();
 
 builder.WebHost.ConfigureKestrel(serverOptions =>
 {
@@ -69,7 +77,6 @@ app.UseHttpsRedirection();
 app.UseRouting();
 
 app.UseAuthorization();
-
 app.MapStaticAssets();
 
 app.UseFileServer();
@@ -85,6 +92,8 @@ app.UseStaticFiles(new StaticFileOptions
         ctx.Context.Response.Headers.Append("Pragma", "no-cache");
     }
 });
+
+app.MapHub<NotificationHub>("/Notification");
 
 app.MapControllerRoute(
     name: "default",

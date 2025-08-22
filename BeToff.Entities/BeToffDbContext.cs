@@ -72,6 +72,7 @@ public class BeToffDbContext : DbContext
         modelBuilder.Entity<Familly>()
             .HasMany(e => e.Invitations)
             .WithOne(e => e.FamillyItem)
+            .OnDelete(DeleteBehavior.NoAction)
             .HasForeignKey(e => e.FamillyId);
     }
 

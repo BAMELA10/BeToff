@@ -1,0 +1,116 @@
+﻿@model BeToff.Web.Models.InvitationViewModel
+@{
+    ViewData["Title"] = "Invitations";
+}
+
+<h1>Invitations</h1>
+
+@* <p>
+    <button id="showmodal" type="button" class="btn btn-danger col-md-2" data-bs-toggle="modal" data-bs-target="#createModal">Create</button>
+</p> *@
+
+
+
+<div class="btn-group mt-2 mb-3" role="group">
+    <input type="radio" class="btn-check" name="btnradio" id="activesend" autocomplete="off"/>
+    <label class="btn btn-outline-dark" for="activesend" >Sended</label>
+
+    <input type="radio" class="btn-check" name="btnradio" id="activeReceive" autocomplete="off" checked/>
+    <label class="btn btn-outline-dark" for="activeReceive">Received</label>
+</div>
+
+<table class="table table-secondary align-middle col-md-10">
+    <thead class="table-dark">
+    <th>
+        Sender
+    </th>
+    <th>
+        SenderAt
+    </th>
+    <th>
+        Family
+    </th>
+    <th>
+        ExpireAt
+    </th>
+    <th>
+        Status
+    </th>
+    <th>
+        Actions
+    </th>
+    </thead>
+    <tbody class="table-group-divider" id="Received">
+        @foreach (var item in Model.InvitationsReceived)
+        {
+            <tr>
+                <td>@item.SenderName</td>
+                <td>@item.SendAt</td>
+                <td>@item.FamilyName</td>
+                <td>@item.ExpireAt</td>
+                <td>@item.Status</td>
+                @if (item.Status == "Pending") {
+                    <td>
+                        <a class="btn btn-primary" asp-action="AcceptionInvitation" asp-route-id="@item.Id">Accept</a>
+                        <a class="btn btn-success" asp-action="RefuseInvitation" asp-route-id="@item.Id">Refuse</a>
+                    </td>
+                }
+                else
+                {
+                    <td> No Action Available</td> 
+                }
+                
+            </tr>
+        }
+    </tbody>
+    <tbody class="table-group-divider" id="Sended">
+        @foreach (var item in Model.InvitationsSended)
+        {
+            <tr>
+                <td>@item.SenderName</td>
+                <td>@item.SendAt</td>
+                <td>@item.FamilyName</td>
+                <td>@item.ExpireAt</td>
+                <td>@item.Status</td>
+                @if (item.Status == "Pending")
+                {
+                    <td>
+                        <a class="btn btn-primary" asp-action="DeleteInvitation" asp-route-id="@item.Id">Cancel</a>
+                    </td>
+                }
+                else
+                {
+                    <td> No Action Available</td>
+                }
+                
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script>
+    const blocksended = document.getElementById('Sended');
+    const blockReceived = document.getElementById('Received');
+    const btnsended = document.getElementById('activesend');
+    const btnReceived = document.getElementById('activeReceive');
+
+
+    @{
+
+    }
+
+    blocksended.setAttribute("style", "display:none");
+    
+    btnsended.addEventListener('click', () => {
+        blockReceived.setAttribute("style", "display:none");
+        blocksended.removeAttribute("style");
+    })
+    btnReceived.addEventListener('click', () => {
+        blocksended.setAttribute("style", "display:none");
+        blockReceived.removeAttribute("style");
+    });
+
+</script>
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script src="~/js/signalr/dist/browser/signalr.min.js"></script>
+<script src="~/js/notification.js"></script>
