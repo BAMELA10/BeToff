@@ -13,7 +13,7 @@ namespace BeToff.BLL.Interface
         public Task RegistrationOfMemberOfFamilly(Guid FamillyId, string MemberId);
         public Task<List<RegistrationResponseDto>> ListOfRegistrationForFamilly(string FamillyId);
         public Task<List<RegistrationResponseDto>> ListOfRegistrationForUser(string UserId);
-        public Task RemoveSpecificFamillyMember(string FamillyId, string MemberId);
+        public Task RemoveSpecificFamillyMember(string FamillyId, string MemberId, string Userid);
 
     }
 }

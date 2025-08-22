@@ -53,9 +53,27 @@ namespace BeToff.BLL
             await _Dao.AddRegistration(FamillyId, IdMember);
         }
 
-        public Task RemoveSpecificFamillyMember(string FamillyId, string MemberId)
+        public async Task RemoveSpecificFamillyMember(string FamillyId, string MemberId, string Userid)
         {
-            throw new NotImplementedException();
+            Guid IdFamilly = Guid.Parse(FamillyId);
+            Guid IdMember = Guid.Parse(MemberId);
+            Guid IdUser = Guid.Parse(Userid);
+
+            var registration = await _Dao.GetRegistrationByFamillyAndUser(IdFamilly, IdMember);
+            
+            var registrationDto = RegistrationMapper.ToDto(registration);
+
+            //Check if the user is concern by regitration of if is the head of familly
+            if(registrationDto.UserRegisteredId == IdMember && registrationDto.FamillyHeadId == IdUser)
+            {
+                await _Dao.DeleteRegistration(IdFamilly, IdMember);
+            }
+            else
+            {
+                throw new Exception("User is not Authorized to Delete this registration");
+            }
+
+
         }
     }
 }
