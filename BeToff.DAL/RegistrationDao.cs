@@ -1,5 +1,6 @@
 ﻿using BeToff.DAL.Interface;
 using BeToff.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +28,15 @@ namespace BeToff.DAL
             await _db.AddAsync(registration);
             await _db.SaveChangesAsync();
             
+        }
+        public async Task<Registration> GetRegistrationByFamillyAndUser(Guid FamillyId, Guid MemberId)
+        {
+            var registration = await _db.Registration
+                .Where(x => x.FamillyId.Equals(FamillyId))
+                .Where(s => s.UserId.Equals(MemberId))
+                .FirstOrDefaultAsync();
+
+            return registration;
         }
     }
 }

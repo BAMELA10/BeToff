@@ -51,7 +51,7 @@ namespace BeToff.Web.Controllers
                 var Subject = new ClaimsIdentity(new[]
                 {
                    new Claim("Email", user.Email),
-                    new Claim("UserId", user.Id.ToString())
+                   new Claim("UserId", user.Id.ToString())
                 },
                 CookieAuthenticationDefaults.AuthenticationScheme);
 

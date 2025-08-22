@@ -8,7 +8,7 @@ namespace BeToff.Entities
 {
     public class Notification : BeToffEntity
     {
-        public DateTime SendAt { get; set; }
+        public DateOnly SendAt { get; set; }
 
     }
 }
