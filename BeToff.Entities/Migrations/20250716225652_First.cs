@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BeToff.Entities.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class First : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -59,16 +59,75 @@ namespace BeToff.Entities.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    IdAuthor = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AuthorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     DateCreation = table.Column<DateOnly>(type: "date", nullable: false),
-                    Image = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Image = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Photos", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Photos_Users_IdAuthor",
-                        column: x => x.IdAuthor,
+                        name: "FK_Photos_Users_AuthorId",
+                        column: x => x.AuthorId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Invitations",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SenderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ReceiverId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FamillyId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ExpireAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    SendAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Invitations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Invitations_Famillies_FamillyId",
+                        column: x => x.FamillyId,
+                        principalTable: "Famillies",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Invitations_Users_ReceiverId",
+                        column: x => x.ReceiverId,
+                        principalTable: "Users",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Invitations_Users_SenderId",
+                        column: x => x.SenderId,
+                        principalTable: "Users",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Registration",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FamillyId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DateOfregistation = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Registration", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Registration_Famillies_FamillyId",
+                        column: x => x.FamillyId,
+                        principalTable: "Famillies",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Registration_Users_UserId",
+                        column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -121,9 +180,34 @@ namespace BeToff.Entities.Migrations
                 column: "IdHead");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Photos_IdAuthor",
+                name: "IX_Invitations_FamillyId",
+                table: "Invitations",
+                column: "FamillyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Invitations_ReceiverId",
+                table: "Invitations",
+                column: "ReceiverId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Invitations_SenderId",
+                table: "Invitations",
+                column: "SenderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Photos_AuthorId",
                 table: "Photos",
-                column: "IdAuthor");
+                column: "AuthorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Registration_FamillyId",
+                table: "Registration",
+                column: "FamillyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Registration_UserId",
+                table: "Registration",
+                column: "UserId");
         }
 
         /// <inheritdoc />
@@ -133,10 +217,16 @@ namespace BeToff.Entities.Migrations
                 name: "Comments");
 
             migrationBuilder.DropTable(
-                name: "Famillies");
+                name: "Invitations");
+
+            migrationBuilder.DropTable(
+                name: "Registration");
 
             migrationBuilder.DropTable(
                 name: "Photos");
+
+            migrationBuilder.DropTable(
+                name: "Famillies");
 
             migrationBuilder.DropTable(
                 name: "Users");

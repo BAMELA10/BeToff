@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BeToff.Entities.Migrations
 {
     [DbContext(typeof(BeToffDbContext))]
-    [Migration("20250619172131_Update1")]
-    partial class Update1
+    [Migration("20250716225652_First")]
+    partial class First
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -84,27 +84,87 @@ namespace BeToff.Entities.Migrations
                     b.ToTable("Famillies");
                 });
 
+            modelBuilder.Entity("BeToff.Entities.Invitation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("ExpireAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("FamillyId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ReceiverId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("SendAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("SenderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FamillyId");
+
+                    b.HasIndex("ReceiverId");
+
+                    b.HasIndex("SenderId");
+
+                    b.ToTable("Invitations");
+                });
+
             modelBuilder.Entity("BeToff.Entities.Photo", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("AuthorId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateOnly>("DateCreation")
                         .HasColumnType("date");
-
-                    b.Property<Guid>("IdAuthor")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Image")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("IdAuthor");
+                    b.HasIndex("AuthorId");
 
                     b.ToTable("Photos");
+                });
+
+            modelBuilder.Entity("BeToff.Entities.Registration", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("DateOfregistation")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("FamillyId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FamillyId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Registration");
                 });
 
             modelBuilder.Entity("BeToff.Entities.User", b =>
@@ -168,12 +228,12 @@ namespace BeToff.Entities.Migrations
             modelBuilder.Entity("BeToff.Entities.Familly", b =>
                 {
                     b.HasOne("BeToff.Entities.User", "CreatedBy")
-                        .WithMany()
+                        .WithMany("FamilliesCreator")
                         .HasForeignKey("IdCreator")
                         .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("BeToff.Entities.User", "Headof")
-                        .WithMany()
+                        .WithMany("FamilliesHeadof")
                         .HasForeignKey("IdHead")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
@@ -183,15 +243,83 @@ namespace BeToff.Entities.Migrations
                     b.Navigation("Headof");
                 });
 
+            modelBuilder.Entity("BeToff.Entities.Invitation", b =>
+                {
+                    b.HasOne("BeToff.Entities.Familly", "FamillyItem")
+                        .WithMany("Invitations")
+                        .HasForeignKey("FamillyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BeToff.Entities.User", "Receiver")
+                        .WithMany("InvitationsReceiver")
+                        .HasForeignKey("ReceiverId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("BeToff.Entities.User", "Sender")
+                        .WithMany("InvitationsSender")
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("FamillyItem");
+
+                    b.Navigation("Receiver");
+
+                    b.Navigation("Sender");
+                });
+
             modelBuilder.Entity("BeToff.Entities.Photo", b =>
                 {
                     b.HasOne("BeToff.Entities.User", "Author")
-                        .WithMany()
-                        .HasForeignKey("IdAuthor")
+                        .WithMany("Photos")
+                        .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Author");
+                });
+
+            modelBuilder.Entity("BeToff.Entities.Registration", b =>
+                {
+                    b.HasOne("BeToff.Entities.Familly", "Familly")
+                        .WithMany("Registrations")
+                        .HasForeignKey("FamillyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BeToff.Entities.User", "User")
+                        .WithMany("Registrations")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Familly");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("BeToff.Entities.Familly", b =>
+                {
+                    b.Navigation("Invitations");
+
+                    b.Navigation("Registrations");
+                });
+
+            modelBuilder.Entity("BeToff.Entities.User", b =>
+                {
+                    b.Navigation("FamilliesCreator");
+
+                    b.Navigation("FamilliesHeadof");
+
+                    b.Navigation("InvitationsReceiver");
+
+                    b.Navigation("InvitationsSender");
+
+                    b.Navigation("Photos");
+
+                    b.Navigation("Registrations");
                 });
 #pragma warning restore 612, 618
         }
