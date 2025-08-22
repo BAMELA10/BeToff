@@ -1,4 +1,4 @@
-﻿@model BeToff.Web.Models.FamillyViewModel
+﻿@model BeToff.Web.Models.RegistrationViewModel
 
 @{
     ViewData["Title"] = "Familly";
@@ -22,12 +22,12 @@
         </th>
     </thead>
     <tbody class="table-group-divider">
-        @foreach (var item in Model.famillies)
+        @foreach (var item in Model.Registrations)
         {   
             <tr>
-                <td>@item.Name</td>
+                <td>@item.FamillyConcerned</td>
                 <td>
-                    <a class="btn btn-primary" href="#">Select</a>
+                    <a class="btn btn-primary" asp-action="Home" asp-route-id="@item.FamillyConcernedId">Select</a>
                     <a class="btn btn-success" href="#">Details</a>
                 </td>
             </tr>
