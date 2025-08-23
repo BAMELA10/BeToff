@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore.Query.Internal;
+using System.Security.Claims;
 
 namespace BeToff.Web.Controllers
 {
@@ -23,7 +24,7 @@ namespace BeToff.Web.Controllers
         public async Task<ActionResult> Index()
         {
 
-            string CurrentUserId = User.FindFirst("UserId").Value;
+            string CurrentUserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             var Data = await _registrationBc.ListOfRegistrationForUser(CurrentUserId);
 
             var model = new RegistrationViewModel()
@@ -70,7 +71,7 @@ namespace BeToff.Web.Controllers
         [Route("Familly/{Id}/Members")]
         public async Task<ActionResult> Members(string Id)
         {
-            string CurrentUser = User.FindFirst("UserId")!.Value;
+            string CurrentUser = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
             ViewData["CurrentUser"] = CurrentUser;
             var AllFamillyMember = await _registrationBc.ListOfRegistrationForFamilly(Id);
             var model = new RegistrationViewModel
@@ -84,7 +85,7 @@ namespace BeToff.Web.Controllers
         [Route("Familly/{Id}/RemoveMember/{MemberId}")]
         public async Task<ActionResult> RemoveMember(string Id, string MemberId)
         {
-            string CurrentUser = User.FindFirst("UserId")!.Value;
+            string CurrentUser = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
             //apply the function for delete a registration for a specific member
             await _registrationBc.RemoveSpecificFamillyMember(Id, MemberId, CurrentUser);
             //redirect to member views
@@ -117,7 +118,7 @@ namespace BeToff.Web.Controllers
             
             try
             {
-                string CurrentUser = User.FindFirst("UserId").Value;
+                string CurrentUser = User.FindFirst(ClaimTypes.NameIdentifier).Value;
                 Guid IdFamilly = await _famillyBc.SaveFamilly(NameOfFamilly, CurrentUser);
                 await _registrationBc.RegistrationOfMemberOfFamilly(IdFamilly, CurrentUser);
                 return RedirectToAction(nameof(Index));

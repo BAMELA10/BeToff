@@ -28,7 +28,7 @@ namespace BeToff.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            string IdAuthor = User.FindFirst("UserId")?.Value;
+            string IdAuthor = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var ListPicture = await _photoBc.ListPhotoForSpecificUser(IdAuthor);
 
 
@@ -81,7 +81,7 @@ namespace BeToff.Web.Controllers
             {
                 Id = Guid.NewGuid(),
                 Title = Title,
-                AuthorId = Guid.Parse(User.FindFirst("UserId")?.Value),
+                AuthorId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value),
                 DateCreation = DateOnly.FromDateTime(DateTime.Now),
                 Image = PathFile
             };

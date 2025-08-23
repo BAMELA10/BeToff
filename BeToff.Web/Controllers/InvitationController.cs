@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using BeToff.BLL.Dto.Response;
 using Microsoft.AspNetCore.Http.Features;
 using BeToff.BLL.Mapping;
+using System.Security.Claims;
 
 namespace BeToff.Web.Controllers
 {
@@ -32,7 +33,7 @@ namespace BeToff.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            string UserId = User.FindFirst("UserId").Value;
+            string UserId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
             var Received = await _invitaionService.ReceiveInvitationByReceiverFromDatabase(UserId);
             var Sended = await _invitaionService.ReceiveInvitationBySenderFromDatabase(UserId);
 
@@ -67,7 +68,7 @@ namespace BeToff.Web.Controllers
         }
         public IActionResult SendInvitation()
         {
-            string SenderId = User.FindFirst("UserId").Value;
+            string SenderId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             var model = new InvitationCreateViewModel()
             {
 
@@ -104,7 +105,7 @@ namespace BeToff.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                string SenderId = User.FindFirst("UserId").Value;
+                string SenderId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
                 await _invitaionService.SendInvitationBySenderToDatabase(SenderId, NewInvitation.ReceiverId.ToString(), NewInvitation.FamillyItemId.ToString());
                 var InvitationReceiver = await _invitaionService.ReceiveInvitationByReceiverFromDatabase(NewInvitation.ReceiverId.ToString());
 
@@ -117,7 +118,7 @@ namespace BeToff.Web.Controllers
                         ListInvitation.Add(CLeanInvitation);
                     }
                     string ReceiverId = NewInvitation.ReceiverId.ToString();
-                    await _notificationHub.Clients.All.SendAsync("ListOfInvitationForReceiver", ListInvitation);
+                    await _notificationHub.Clients.User(NewInvitation.ReceiverId.ToString()).SendAsync("ListOfInvitationForReceiver", ListInvitation);
                 }
                 return RedirectToAction(nameof(Index));
             }
