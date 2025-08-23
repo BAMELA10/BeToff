@@ -1,4 +1,5 @@
 ﻿using BeToff.BLL.Interface;
+using BeToff.BLL.Mapping;
 using BeToff.BLL.Service.Interface;
 using BeToff.Entities;
 using BeToff.Web.Hubs;
@@ -89,16 +90,31 @@ namespace BeToff.Web.Controllers
             //apply the function for delete a registration for a specific member
             await _registrationBc.RemoveSpecificFamillyMember(Id, MemberId, CurrentUser);
             //redirect to member views
-            return RedirectToAction("Members", new { Id = Id, MemberId = MemberId });
+            return RedirectToAction("Members", new { Id = Id });
         }
 
-        //[Route("Familly/{Id}/DefineHead/{MemberId}")]
-        //public async Task<ActionResult> DefineHead(string Id, string MemberId)
-        //{
-        //    //apply the function for Change the familly's head
-        //    //redirect to member views
-        //    return View();
-        //}
+        [Route("Familly/{Id}/DefineHead/{MemberId}")]
+        public async Task<ActionResult> DefineHead(string Id, string MemberId)
+        {
+            string CurrentUser = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+            //Get current familly
+            var item = await _famillyBc.SelectFamilly(Id);
+            var FamillyDto = FamillyMapper.ToDto(item);
+            //Check if Current User is the head of the familly
+            if (CurrentUser.Equals(FamillyDto.IdHead.ToString()))
+            {
+                //apply the function for Change the familly's head
+                await _famillyBc.ChangeHeadOfFamilly(Id, MemberId);
+                //redirect to member views
+                return RedirectToAction("Members", new { Id = Id });
+            }
+            else
+            {
+                throw new Exception("Unauthorized Action for this User");
+            }
+         
+            
+        }
 
         //[Route("Familly/{Id}/Exit")]
         //public async Task<ActionResult> Exit(string Id)

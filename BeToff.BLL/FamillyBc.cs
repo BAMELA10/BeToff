@@ -43,9 +43,12 @@ namespace BeToff.BLL
 
         }
 
-        public Task<Task> ChangeHeadOfFamilly(Guid FamillyId, Guid UserId)
+        public async Task<Task> ChangeHeadOfFamilly(string FamillyId, string UserId)
         {
-            throw new NotImplementedException();
+            Guid IdFamilly = Guid.Parse(FamillyId);
+            Guid IdUser = Guid.Parse(UserId);
+            await _famillyDao.UpateIdHeadOfFamilly(IdFamilly, IdUser);
+            return Task.CompletedTask;
         }
     }
 }

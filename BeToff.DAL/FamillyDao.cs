@@ -20,6 +20,8 @@ public class FamillyDao : BeToffDao, IFamillyDao
     {
        return await _FamillyDb.Famillies
             .Where(items => items.Id == FamillyId)
+            .Include(a => a.Headof)
+            .Include(b => b.CreatedBy)
             .FirstAsync();
     }
 
@@ -50,7 +52,7 @@ public class FamillyDao : BeToffDao, IFamillyDao
 
     }
 
-    public async Task<Task> ChangeHeadOfFamilly(Guid FamillyId, Guid UserId)
+    public async Task<Task> UpateIdHeadOfFamilly(Guid FamillyId, Guid UserId)
     {
         var item = await _FamillyDb.Famillies
             .Where(x => x.Id.Equals(FamillyId))

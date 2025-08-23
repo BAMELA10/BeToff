@@ -14,6 +14,6 @@ namespace BeToff.BLL.Interface
         public Task<Guid> SaveFamilly(string NameOfFamilly, string CurrentUserId);
         public Task<List<Familly>> SelectFamillyByHead(string IdHead);
 
-        public Task<Task> ChangeHeadOfFamilly(Guid FamillyId, Guid UserId);
+        public Task<Task> ChangeHeadOfFamilly(string FamillyId, string UserId);
     }
 }

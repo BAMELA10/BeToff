@@ -37,7 +37,7 @@
                         }
                         else
                         {
-                            <a class="btn btn-primary" href="#">Define Head</a>
+                            <a class="btn btn-primary" asp-action="DefineHead" asp-route-id="@item.FamillyConcernedId" asp-route-MemberId="@item.UserRegisteredId">Define Head</a>
                             <a class="btn btn-success" asp-action="RemoveMember" asp-route-id="@item.FamillyConcernedId" asp-route-MemberId="@item.UserRegisteredId">Remove</a>
                         }
                     </td>
