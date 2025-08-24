@@ -70,4 +70,11 @@ public class FamillyDao : BeToffDao, IFamillyDao
 
         return Task.CompletedTask;
     }
+
+    public async Task DeleteFamillyById(Guid FamillyId)
+    {
+        await _FamillyDb.Famillies
+            .Where(x => x.Id.Equals(FamillyId))
+            .ExecuteDeleteAsync();
+    }
 }

@@ -15,6 +15,7 @@ namespace BeToff.DAL.Interface
         public Task<List<Registration>> GetRegistrationByUser(Guid UserId);
         public Task<Task> DeleteRegistration(Guid FamillyId, Guid MemberId);
 
+        
     }
 
 }

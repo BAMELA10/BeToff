@@ -15,5 +15,7 @@ namespace BeToff.BLL.Interface
         public Task<List<RegistrationResponseDto>> ListOfRegistrationForUser(string UserId);
         public Task RemoveSpecificFamillyMember(string FamillyId, string MemberId, string Userid);
 
+        public Task<Guid> SelectRandomIdentiferMenberOfFamilly(string FamillyId);
+
     }
 }
