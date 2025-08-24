@@ -16,7 +16,7 @@ public class Familly : BeToffEntity
     public DateOnly DateCreation {get; set;}
 
     [ForeignKey("CreatedBy")]
-    public Guid? IdCreator {get; set;}
+    public Guid IdCreator {get; set;}
 
     //[Column("Founder")]
     [DeleteBehavior(DeleteBehavior.NoAction)]

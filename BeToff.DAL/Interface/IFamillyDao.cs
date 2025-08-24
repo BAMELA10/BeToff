@@ -7,7 +7,7 @@ public interface IFamillyDao: IBetoff<Familly>
     Task<List<Familly>> GetFamillyByIdHead(Guid IdHead);
     Task<Familly> GetFamillyById(Guid FamillyId);
 
-    Task<Task> ChangeHeadOfFamilly(Guid FamillyId, Guid UserId);
+    Task<Task> UpateIdHeadOfFamilly(Guid FamillyId, Guid UserId);
 
 
 }
