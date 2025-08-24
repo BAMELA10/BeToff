@@ -4,6 +4,7 @@ using BeToff.BLL.Mapping;
 using BeToff.DAL;
 using BeToff.DAL.Interface;
 using BeToff.Entities;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,9 +16,11 @@ namespace BeToff.BLL
     public  class RegistrationBc: BeToffBc<Registration, RegistrationDao>, IRegistrationBc
     {
         private readonly IRegistrationDao _Dao;
-        public RegistrationBc(IRegistrationDao dao)
+        private readonly IFamillyDao _famillyDao;
+        public RegistrationBc(IRegistrationDao dao, IFamillyDao famillyDao)
         {
              _Dao = dao;
+            _famillyDao = famillyDao;
         }
 
         public async Task<List<RegistrationResponseDto>> ListOfRegistrationForFamilly(string FamillyId)
@@ -64,15 +67,39 @@ namespace BeToff.BLL
             var registrationDto = RegistrationMapper.ToDto(registration);
 
             //Check if the user is concern by regitration of if is the head of familly
-            if(registrationDto.UserRegisteredId == IdMember && registrationDto.FamillyHeadId == IdUser)
+            if(registrationDto.UserRegisteredId == IdMember || registrationDto.FamillyHeadId == IdUser)
             {
                 await _Dao.DeleteRegistration(IdFamilly, IdMember);
+                var RegistrationsForfamilly = await _Dao.GetRegistrationByFamilly(IdFamilly);
+                var CountRegistration = RegistrationsForfamilly.Count;
+                //if the familly do not contains any member now, the familly must be delete after Exit of the last person
+                if(CountRegistration == 0)
+                {
+                    Console.WriteLine("Dernier membre supprimé");
+                    await _famillyDao.DeleteFamillyById(IdFamilly);
+                }
             }
             else
             {
                 throw new Exception("User is not Authorized to Delete this registration");
             }
 
+
+        }
+
+        public async Task<Guid> SelectRandomIdentiferMenberOfFamilly(string FamillyId)
+        {
+            Guid IdFamilly = Guid.Parse(FamillyId);
+            var RegistrationOfFamilly = await _Dao.GetRegistrationByFamilly(IdFamilly);
+            var ListOfIdMember = new List<Guid>();
+            RegistrationOfFamilly.ForEach(x =>
+            {
+                var item = RegistrationMapper.ToDto(x);
+                ListOfIdMember.Add(item.UserRegisteredId);
+            });
+            Random random = new Random();
+            int randomNumber = random.Next(0, ListOfIdMember.Count - 1);
+            return ListOfIdMember[randomNumber];
 
         }
     }

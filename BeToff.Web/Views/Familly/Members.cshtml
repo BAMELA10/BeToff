@@ -33,7 +33,7 @@
                     <td>
                         @if (item.UserRegisteredId.ToString().Equals(ViewData["CurrentUser"]))
                         {
-                            <a class="btn btn-outline-danger" href="#">Exit</a>
+                            <a class="btn btn-outline-danger" asp-action="Exit" asp-route-id="@item.FamillyConcernedId">Exit</a>
                         }
                         else
                         {
@@ -46,7 +46,8 @@
                 {
                     @if (item.UserRegisteredId.ToString().Equals(ViewData["CurrentUser"]))
                     {
-                        <td><a class="btn btn-outline-danger" href="#">Exit</a></td>
+                        <td> <a class="btn btn-outline-danger" asp-action="Exit" asp-route-id="@item.FamillyConcernedId">Exit</a></td>
+                             
                     }
                     else
                     {

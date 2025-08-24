@@ -116,14 +116,39 @@ namespace BeToff.Web.Controllers
             
         }
 
-        //[Route("Familly/{Id}/Exit")]
-        //public async Task<ActionResult> Exit(string Id)
-        //{
-        //    string CurrentUser = User.FindFirst("UserId")?.Value;
-        //    //apply the function for delete a registration for a specific member
-        //    //redirect to member views
-        //    return View();
-        //}
+        [Route("Familly/{Id}/Exit/")]
+        public async Task<ActionResult> Exit(string Id)
+        {
+            string CurrentUser = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+
+            //Get current familly
+            var item = await _famillyBc.SelectFamilly(Id);
+            var FamillyDto = FamillyMapper.ToDto(item);
+            Console.WriteLine("idHead" + FamillyDto.IdHead.ToString());
+            Console.WriteLine("CurrentUser" + CurrentUser);
+
+            if (CurrentUser.Equals(FamillyDto.IdHead.ToString()))
+            {
+                Console.WriteLine("Operation for chief of familly");
+                // Get Identifier for New Familly's Head
+                var RandomNewHeadForFamilly = await _registrationBc.SelectRandomIdentiferMenberOfFamilly(Id);
+                //define the new head of familly
+                await _famillyBc.ChangeHeadOfFamilly(Id, RandomNewHeadForFamilly.ToString());
+                //remove registration
+                //apply the function for delete a registration for a specific member
+                await _registrationBc.RemoveSpecificFamillyMember(Id, CurrentUser, CurrentUser);
+                //redirect to Familly Index page
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                //remove registration
+                //apply the function for delete a registration for a specific member
+                await _registrationBc.RemoveSpecificFamillyMember(Id, CurrentUser, CurrentUser);
+                //redirect to Familly Index page
+                return RedirectToAction(nameof(Index));
+            }
+        }
 
 
 
