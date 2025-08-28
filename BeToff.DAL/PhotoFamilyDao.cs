@@ -1,5 +1,6 @@
 ﻿using BeToff.DAL.Interface;
 using BeToff.Entities;
+using Microsoft.EntityFrameworkCore;
 namespace BeToff.DAL
 {
     public class PhotoFamilyDao : BeToffDao, IPhotoFamilyDao
@@ -16,19 +17,26 @@ namespace BeToff.DAL
             
         }
 
-        public Task DeletePhotoFamily(Guid Id)
+        public async Task<List<PhotoFamilly>> GetByFamily(Guid IdFamily)
         {
-            throw new NotImplementedException();
+            var ListResult = await _dbContext.PhotoFamilly
+                .Where(s => s.FamillyId == IdFamily)
+                .Include(x => x.Author)
+                .Include(y => y.Family)
+                .ToListAsync();
+
+            return ListResult;
         }
 
-        public Task<List<PhotoFamilly>> GetByFamily(Guid IdFamily)
+        public async Task<PhotoFamilly> GetById(Guid Id)
         {
-            throw new NotImplementedException();
-        }
+            var result = await _dbContext.PhotoFamilly
+               .Where(s => s.Id == Id)
+               .Include(x => x.Author)
+               .Include(y => y.Family)
+               .FirstAsync();
 
-        public Task<PhotoFamilly> GetById(Guid Id)
-        {
-            throw new NotImplementedException();
+            return result;
         }
     }
 }
