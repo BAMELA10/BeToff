@@ -1,4 +1,5 @@
-﻿using BeToff.BLL.Interface;
+﻿using BeToff.BLL.Dto.Request;
+using BeToff.BLL.Interface;
 using BeToff.BLL.Mapping;
 using BeToff.BLL.Service.Interface;
 using BeToff.Entities;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore.Query.Internal;
+using Microsoft.Extensions.Hosting;
 using System.Security.Claims;
 
 namespace BeToff.Web.Controllers
@@ -16,11 +18,17 @@ namespace BeToff.Web.Controllers
     {
         private readonly IFamillyBc _famillyBc;
         private readonly IRegistrationBc _registrationBc;
+        private readonly IWebHostEnvironment _hostEnvironment;
+        private readonly IPhotoFamilyBc _photoFamilyBc;
+        private readonly int _MaxBufferSize = 512 * 1024 * 1024;
+        private readonly List<string> _ExtensionAuthorized = [".png", ".jpg", ".jpeg"];
 
-        public FamillyController(IFamillyBc famillyBc, IRegistrationBc registrationBc)
+        public FamillyController(IFamillyBc famillyBc, IRegistrationBc registrationBc, IWebHostEnvironment hostEnvironment, IPhotoFamilyBc photoFamilyBc)
         {
             _famillyBc = famillyBc;
             _registrationBc = registrationBc;
+            _hostEnvironment = hostEnvironment;
+            _photoFamilyBc = photoFamilyBc;
         }
         public async Task<ActionResult> Index()
         {
@@ -148,6 +156,59 @@ namespace BeToff.Web.Controllers
                 //redirect to Familly Index page
                 return RedirectToAction(nameof(Index));
             }
+        }
+
+        [Route("Familly/{Id}/AddPhoto/")]
+        public ActionResult AddPhoto(string Id)
+        {
+            return View();
+        }
+        [HttpPost]
+        [Route("Familly/{Id}/AddPhoto/")]
+        public async Task<ActionResult> AddPhoto(string Id, PhotoFamilyCreateViewModel Photo, IFormFile image)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+            if (image.Length > _MaxBufferSize)
+            {
+                ViewData["ErrorMessage"] = "the file's size is grather than 500 MB";
+                return View();
+            }
+            if (!_ExtensionAuthorized.Contains(Path.GetExtension(image.FileName)))
+            {
+                ViewData["ErrorMessage"] = "UnAuthorized Extension";
+                return View();
+            }
+
+            var FileName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
+
+            Directory.CreateDirectory(Path.Combine(_hostEnvironment.WebRootPath, "Media"));
+
+            var PathFile = Path.Combine(_hostEnvironment.WebRootPath, "Media", FileName);
+
+
+            using (var Stream = new FileStream(PathFile, FileMode.Create))
+            {
+                await image.CopyToAsync(Stream);
+            }
+
+            var CurrentUser = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+            var GuidUser = Guid.Parse(CurrentUser);
+            var GuidFamilly = Guid.Parse(Id);
+
+            var Dto = new PhotoFamillyCreateDto
+            {
+                Title = Photo.Title,
+                Image = PathFile,
+                FamilyId = GuidFamilly,
+                AuthorId = GuidUser
+            };
+
+            await _photoFamilyBc.AddNewPhotoOnFamillyAlbum(Dto);
+
+            return RedirectToAction("Album", new { Id = Id });
         }
 
 

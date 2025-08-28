@@ -20,10 +20,6 @@
     <ProjectReference Include="..\BeToff.Entities\BeToff.Entities.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Dto\Request\" />
-  </ItemGroup>
-
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
