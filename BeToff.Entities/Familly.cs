@@ -34,4 +34,6 @@ public class Familly : BeToffEntity
     public IEnumerable<Registration> Registrations { get; set; } = new List<Registration>();
 
     public IEnumerable<Invitation> Invitations { get; set; } = new List<Invitation>();
+
+    public IEnumerable<PhotoFamilly> photoFamillies { get; set; } = new List<PhotoFamilly>();
 }

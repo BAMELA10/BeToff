@@ -36,6 +36,8 @@ builder.Services.AddTransient<IRegistrationDao, RegistrationDao>();
 builder.Services.AddTransient<IRegistrationBc, RegistrationBc>();
 builder.Services.AddTransient<IInvitationDao, InvitationDao>();
 builder.Services.AddTransient<IUserInvitationService, UserInvitationService>();
+builder.Services.AddTransient<IPhotoFamilyDao, PhotoFamilyDao>();
+builder.Services.AddTransient<IPhotoFamilyBc, PhotoFamilyBc>();
 builder.Services.AddHostedService<WebBackgroundService>();
 
 builder.WebHost.ConfigureKestrel(serverOptions =>

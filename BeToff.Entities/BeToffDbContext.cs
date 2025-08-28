@@ -17,6 +17,7 @@ public class BeToffDbContext : DbContext
     public DbSet<Registration> Registration { get; set; }
     public DbSet<Invitation> Invitations { get; set; }
 
+    public DbSet<PhotoFamilly> PhotoFamilly { get; set; }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         base.OnConfiguring(optionsBuilder);
