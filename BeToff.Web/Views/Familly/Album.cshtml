@@ -7,16 +7,16 @@
     <h1 class="display-4">Album</h1>
 </div>
 
-<div class="text-center">
+<div class="row justify-content-around text-center">
     @foreach(var items in Model.Items) {
-        <div class="card" style="width: 18rem;">
-            <img class="card-image-top" src="@items.Image" />
+        <div class="card rounded-0 col-sm-12 col-md-5 col-lg-3 mt-2 mb-3">
+            <img src="@Url.Content("~/Media/" + items.Image)" class="card-image-top" alt="@items.Title" />
             <div class="card-header">
-               @items.Title
+                @items.Title
             </div>
             <div class="card-body">
                 <a class="btn btn-danger" asp-action="RemoveFamillyPicture" asp-route-id="@items.FamilyId" asp-route-photoId="@items.Id">Delete</a>
-                @* <a class="btn btn-dark" asp-action="" asp-route-id="" asp-route-photoId="">View</a> *@
+                <a class="btn btn-dark" asp-action="" asp-route-id="" asp-route-photoId="">View</a>
             </div>
             <div class="card-footer ">
                 @items.PubliedAt;

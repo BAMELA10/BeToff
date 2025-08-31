@@ -21,7 +21,7 @@ namespace BeToff.BLL.Mapping
                 FamilyId = picture.FamillyId.ToString(),
                 FamilyName = picture.Family.Name,
                 PubliedAt = picture.DateCreation,
-                Image = picture.Image
+                Image = Path.GetFileName(picture.Image),
 
 
             };
