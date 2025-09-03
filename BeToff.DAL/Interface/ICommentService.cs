@@ -3,9 +3,8 @@ using BeToff.Entities;
 
 namespace BeToff.DAL.Interface;
 
-public interface ICommentDao : IBetoff<Comment>
+public interface ICommentService 
 {
     List<Comment> GetCommentsByDate(Guid id, DateOnly DateCreation);
-    List<Comment> GetCommentsByAuthor(Guid id, string Name);
 
 }
