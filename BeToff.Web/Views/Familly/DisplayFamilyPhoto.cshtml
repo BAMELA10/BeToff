@@ -1,0 +1,64 @@
+﻿@model BeToff.Web.Models.PhotoFamilyViewModel
+
+<h1>DisplayPicture</h1>
+
+<div>
+    <h4>Photo</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            <p>Title</p>
+        </dt>
+        <dd class="col-sm-10">
+            <p>@Model.picture?.Title</p>
+        </dd>
+        <dt class = "col-sm-2">
+            <p>Author</p>
+        </dt>
+        <dd class = "col-sm-10">
+            <p>@Model.picture?.AuthorName</p>
+        </dd>
+        <dt class = "col-sm-2">
+            <p>Date of Publication</p>
+        </dt>
+        <dd class = "col-sm-10">
+            <p>@Model.picture?.PubliedAt.ToString()</p>
+        </dd>
+        <dt class = "col-sm-2">
+            <p>Illustration</p>
+        </dt>
+        <dd class = "col-sm-10">
+            @* <img src="@Url.Content("~/Media/" + Model.FileName)" class="img-thumbnail" alt="" /> *@
+            @if (!string.IsNullOrEmpty(Model.FileName))
+            {
+                <img src="@Url.Content("~/Media/" + Model.FileName)"
+                     class="img-thumbnail"
+                     alt="@Model.picture?.Title" />
+            }
+            else
+            {
+                <p class="text-danger">Image Unavailable</p>
+            }
+           
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Index" class="btn btn-dark">Album</a>
+    <form asp-controller="Familly" asp-action="AddCommentFamillyPicture" asp-route-id="@Model.picture.FamilyId" asp-route-photoid="@Model.picture.Id" method="post" class="form-control d-inline-flex">
+        <input class="form-control col-sm-6 col-md-4 col-lg-3" type="text" name="content" value="" />
+        <button class="btn btn-outline-primary" type="submit">Comment</button>
+    </form>
+</div>
+<div class="col-5 col-md-6">
+    @foreach(var item in Model.Comments) {
+        <div class="card mb-2 mt-3">
+            <div class="card-body">
+                <h5 class="card-title">@item.AuthorName</h5>
+                <p class="card-text">@item.Content</p>
+                <p class="card-text"><small class="text-body-secondary">@item.PubliedAt</small></p>
+                <a asp-action="Index" class="btn btn-danger">Delete</a>
+            </div>
+        </div>
+    }
+</div>

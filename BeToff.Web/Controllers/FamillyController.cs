@@ -3,6 +3,7 @@ using BeToff.BLL.Dto.Request;
 using BeToff.BLL.Interface;
 using BeToff.BLL.Mapping;
 using BeToff.BLL.Service.Interface;
+using BeToff.DAL.Interface;
 using BeToff.Entities;
 using BeToff.Web.Hubs;
 using BeToff.Web.Models;
@@ -214,6 +215,34 @@ namespace BeToff.Web.Controllers
             return RedirectToAction("Home", new { Id = Id });
         }
 
+        [Route("Familly/{Id}/DisplayPhoto/{PhotoId}")]
+        public async Task<ActionResult> DisplayFamilyPhoto(string Id, string PhotoId)
+        {
+            if (String.IsNullOrEmpty(Id) || String.IsNullOrEmpty(PhotoId))
+            {
+                return BadRequest();
+            }
+            var result = await _photoFamilyBc.GetSpecificPcitureOfFamily(PhotoId, Id);
+            var Comments = await _photoFamilyBc.ListCommentForspecificPhotoFamily(PhotoId);
+
+            if (result == null || string.IsNullOrEmpty(result.Image))
+            {
+                return NotFound(); // ou return View("Error"), ou un fallback
+            };
+
+            string FileName = Path.GetFileName(result.Image);
+
+
+            var model = new PhotoFamilyViewModel
+            {
+                picture = result,
+                FileName = FileName,
+                Comments = Comments
+            };
+
+            return View(model);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(string NameOfFamilly)
@@ -261,6 +290,32 @@ namespace BeToff.Web.Controllers
 
             await _photoFamilyBc.RemovePhotoFromFamilyAlbum(PhotoId, Id); 
             return RedirectToAction("Album",new {Id = Id});
+        }
+
+
+        [Route("Familly/{Id}/DisplayPhoto/{PhotoId}/comment")]
+        public async Task<ActionResult> AddCommentFamillyPicture(string Id, string PhotoId, string content)
+        {
+            if (String.IsNullOrEmpty(Id) || String.IsNullOrEmpty(PhotoId))
+            {
+                return BadRequest();
+            }
+            else
+            {
+                string user = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+       
+                var Dto = new CommentCreateDto
+                {
+                    Content = content,
+                    PhotoFamily = PhotoId,
+                    Author = user,
+                    PubliedAt = DateOnly.FromDateTime(DateTime.Now)
+                };
+
+                await _photoFamilyBc.CommentPhotoFamily(Dto);
+                return RedirectToAction("DisplayFamilyPhoto", new { Id = Id, PhotoId = PhotoId });
+            }
+
         }
     }
 }

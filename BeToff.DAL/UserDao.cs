@@ -28,4 +28,15 @@ public class UserDao : BeToffDao, IUserDao
         }
         return user;
     }
+
+    public async Task<User> GetUserById(string Id)
+    {
+        Guid NewId = Guid.Parse(Id);
+        var user = await _UserDB.Users.SingleOrDefaultAsync(item => item.Id == NewId);
+        if (user == null)
+        {
+            return null;
+        }
+        return user;
+    }
 }

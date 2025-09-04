@@ -34,7 +34,7 @@ namespace BeToff.DAL
                .Where(s => s.Id == Id)
                .Include(x => x.Author)
                .Include(y => y.Family)
-               .FirstAsync();
+               .FirstOrDefaultAsync();
 
             return result;
         }
