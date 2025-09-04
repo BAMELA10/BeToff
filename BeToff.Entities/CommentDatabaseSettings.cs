@@ -10,6 +10,6 @@ namespace BeToff.Entities
     {
         public string? ConnectionString { get; set; }
         public string? DatabaseName { get; set; }
-        public string? CommentDatabaseName { get; set; }
+        public string? CommentCollectionName { get; set; }
     }
 }

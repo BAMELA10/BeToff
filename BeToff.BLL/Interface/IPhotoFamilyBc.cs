@@ -11,6 +11,8 @@ namespace BeToff.BLL.Interface
         public Task<List<PhotoFamilyResponseDto>> GenerateAlbumForFamily(string  FamillyId);
         public Task<PhotoFamilyResponseDto> GetSpecificPcitureOfFamily(string Id, string FamillyId);
         public Task RemovePhotoFromFamilyAlbum(string Id, string FamillyId);
+        public Task CommentPhotoFamily(CommentCreateDto Dto);
+
 
     }
 }

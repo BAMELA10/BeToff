@@ -3,6 +3,7 @@ using BeToff.BLL.Dto.Request;
 using BeToff.BLL.Interface;
 using BeToff.BLL.Mapping;
 using BeToff.BLL.Service.Interface;
+using BeToff.DAL.Interface;
 using BeToff.Entities;
 using BeToff.Web.Hubs;
 using BeToff.Web.Models;
@@ -261,6 +262,32 @@ namespace BeToff.Web.Controllers
 
             await _photoFamilyBc.RemovePhotoFromFamilyAlbum(PhotoId, Id); 
             return RedirectToAction("Album",new {Id = Id});
+        }
+
+        [Route("Familly/{Id}/DisplayPhoto/{PhotoId}/comment")]
+        public async Task<ActionResult> AddCommentFamillyPicture(string Id, string PhotoId)
+        {
+            Console.WriteLine(Id + "  xxxxxxxxx    " + PhotoId + "   xxxxxxxxxx  ");
+            if (String.IsNullOrEmpty(Id) || String.IsNullOrEmpty(PhotoId))
+            {
+                return BadRequest();
+            }
+            else
+            {
+                //string user = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+                //Console.WriteLine(Id + "  xxxxxxxxx    " + PhotoId + "   xxxxxxxxxx  " + user);
+                var Dto = new CommentCreateDto
+                {
+                    Content = "gfdgdfgdfgdfg",
+                    PhotoFamily = PhotoId,
+                    Author = "02ef1348 - 126f - 42c4 - bcb6 - 08ddd8021b6d",
+                    PubliedAt = DateOnly.FromDateTime(DateTime.Now)
+                };
+
+                await _photoFamilyBc.CommentPhotoFamily(Dto);
+                return RedirectToAction("Album", new { Id = Id });
+            }
+
         }
     }
 }

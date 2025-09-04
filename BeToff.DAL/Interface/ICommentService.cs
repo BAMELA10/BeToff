@@ -3,8 +3,11 @@ using BeToff.Entities;
 
 namespace BeToff.DAL.Interface;
 
-public interface ICommentService 
+public interface ICommentService : IComDao<Comment>
 {
-    List<Comment> GetCommentsByDate(Guid id, DateOnly DateCreation);
+    Task InsertComment(Comment comment);
+    Task<List<Comment>> GetCommentsByFamilyPicture(string IdPictureFamily);
+
+
 
 }

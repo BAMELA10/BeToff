@@ -12,15 +12,24 @@ namespace BeToff.BLL
     {
         private readonly IPhotoFamilyDao _photoFamilyDao;
         private readonly IPhotoDao _photoDao;
-        public PhotoFamilyBc(IPhotoFamilyDao photoFamilyDao, IPhotoDao photoDao)
+        private readonly ICommentService _commentService;
+        public PhotoFamilyBc(IPhotoFamilyDao photoFamilyDao, IPhotoDao photoDao, ICommentService commentService)
         {
             _photoFamilyDao = photoFamilyDao;
             _photoDao = photoDao;
+            _commentService = commentService;
+
         }
         public async Task AddNewPhotoOnFamillyAlbum(PhotoFamillyCreateDto Dto)
         {
             var photo = PhotoFamillyCreateMapper.FromDto(Dto);
             await _photoFamilyDao.CreatePhotoFamily(photo);
+        }
+
+        public async Task CommentPhotoFamily(CommentCreateDto Dto)
+        {
+            var Comment = CommentCreateMapper.FromDto(Dto);
+            await _commentService.InsertComment(Comment);
         }
 
         public async Task<List<PhotoFamilyResponseDto>> GenerateAlbumForFamily(string FamillyId)

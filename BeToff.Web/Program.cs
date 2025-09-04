@@ -11,6 +11,7 @@ using BeToff.BLL.Service.Impl;
 using BeToff.BLL.Service.Interface;
 using BeToff.Web.Hubs;
 using BeToff.Web.WebServices;
+using BeToff.DAL.Service;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -42,7 +43,7 @@ builder.Services.AddTransient<IInvitationDao, InvitationDao>();
 builder.Services.AddTransient<IUserInvitationService, UserInvitationService>();
 builder.Services.AddTransient<IPhotoFamilyDao, PhotoFamilyDao>();
 builder.Services.AddTransient<IPhotoFamilyBc, PhotoFamilyBc>();
-builder.Services.AddSingleton<>,
+builder.Services.AddSingleton<ICommentService, CommentService>();
 builder.Services.AddHostedService<WebBackgroundService>();
 
 builder.WebHost.ConfigureKestrel(serverOptions =>
