@@ -22,7 +22,7 @@ public class FamillyDao : BeToffDao, IFamillyDao
             .Where(items => items.Id == FamillyId)
             .Include(a => a.Headof)
             .Include(b => b.CreatedBy)
-            .FirstAsync();
+            .FirstOrDefaultAsync();
     }
 
     public async Task<List<Familly>> GetFamillyByIdHead(Guid IdHead)

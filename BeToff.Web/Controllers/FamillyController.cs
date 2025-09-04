@@ -215,6 +215,34 @@ namespace BeToff.Web.Controllers
             return RedirectToAction("Home", new { Id = Id });
         }
 
+        [Route("Familly/{Id}/DisplayPhoto/{PhotoId}")]
+        public async Task<ActionResult> DisplayFamilyPhoto(string Id, string PhotoId)
+        {
+            if (String.IsNullOrEmpty(Id) || String.IsNullOrEmpty(PhotoId))
+            {
+                return BadRequest();
+            }
+            var result = await _photoFamilyBc.GetSpecificPcitureOfFamily(PhotoId, Id);
+            var Comments = await _photoFamilyBc.ListCommentForspecificPhotoFamily(PhotoId);
+
+            if (result == null || string.IsNullOrEmpty(result.Image))
+            {
+                return NotFound(); // ou return View("Error"), ou un fallback
+            };
+
+            string FileName = Path.GetFileName(result.Image);
+
+
+            var model = new PhotoFamilyViewModel
+            {
+                picture = result,
+                FileName = FileName,
+                Comments = Comments
+            };
+
+            return View(model);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(string NameOfFamilly)
@@ -264,28 +292,28 @@ namespace BeToff.Web.Controllers
             return RedirectToAction("Album",new {Id = Id});
         }
 
+
         [Route("Familly/{Id}/DisplayPhoto/{PhotoId}/comment")]
-        public async Task<ActionResult> AddCommentFamillyPicture(string Id, string PhotoId)
+        public async Task<ActionResult> AddCommentFamillyPicture(string Id, string PhotoId, string content)
         {
-            Console.WriteLine(Id + "  xxxxxxxxx    " + PhotoId + "   xxxxxxxxxx  ");
             if (String.IsNullOrEmpty(Id) || String.IsNullOrEmpty(PhotoId))
             {
                 return BadRequest();
             }
             else
             {
-                //string user = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
-                //Console.WriteLine(Id + "  xxxxxxxxx    " + PhotoId + "   xxxxxxxxxx  " + user);
+                string user = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+       
                 var Dto = new CommentCreateDto
                 {
-                    Content = "gfdgdfgdfgdfg",
+                    Content = content,
                     PhotoFamily = PhotoId,
-                    Author = "02ef1348 - 126f - 42c4 - bcb6 - 08ddd8021b6d",
+                    Author = user,
                     PubliedAt = DateOnly.FromDateTime(DateTime.Now)
                 };
 
                 await _photoFamilyBc.CommentPhotoFamily(Dto);
-                return RedirectToAction("Album", new { Id = Id });
+                return RedirectToAction("DisplayFamilyPhoto", new { Id = Id, PhotoId = PhotoId });
             }
 
         }

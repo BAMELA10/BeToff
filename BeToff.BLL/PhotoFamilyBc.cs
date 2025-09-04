@@ -5,6 +5,7 @@ using BeToff.BLL.Mapping;
 using BeToff.DAL;
 using BeToff.DAL.Interface;
 using BeToff.Entities;
+using System.Collections.Generic;
 
 namespace BeToff.BLL
 {
@@ -13,12 +14,13 @@ namespace BeToff.BLL
         private readonly IPhotoFamilyDao _photoFamilyDao;
         private readonly IPhotoDao _photoDao;
         private readonly ICommentService _commentService;
-        public PhotoFamilyBc(IPhotoFamilyDao photoFamilyDao, IPhotoDao photoDao, ICommentService commentService)
+        private readonly IUserDao _userDao;
+        public PhotoFamilyBc(IPhotoFamilyDao photoFamilyDao, IPhotoDao photoDao, ICommentService commentService, IUserDao userDao)
         {
             _photoFamilyDao = photoFamilyDao;
             _photoDao = photoDao;
             _commentService = commentService;
-
+            _userDao = userDao;
         }
         public async Task AddNewPhotoOnFamillyAlbum(PhotoFamillyCreateDto Dto)
         {
@@ -30,6 +32,32 @@ namespace BeToff.BLL
         {
             var Comment = CommentCreateMapper.FromDto(Dto);
             await _commentService.InsertComment(Comment);
+        }
+        public async Task<List<CommentResponseDto>> ListCommentForspecificPhotoFamily(string IdPhoto)
+        {
+            var CommentForPhoto = await _commentService.GetCommentsByFamilyPicture(IdPhoto);
+            var ListDto = new List<CommentResponseDto>();
+            if(CommentForPhoto.Count == 0)
+            {
+                return ListDto;
+            }
+            else
+            {
+                foreach (var item in CommentForPhoto)
+                {
+                    User user = await _userDao.GetUserById(item.Author);
+                    var photo = await _photoFamilyDao.GetById(Guid.Parse(IdPhoto));
+                    var Dto = CommentResponseMapper.ToDto(item);
+                    Dto.AuthorName = user.FullName;
+                    Dto.PhotoFamilyTitle = photo.Title;
+
+                    ListDto.Add(Dto);
+                }
+                return ListDto;
+            }
+            
+
+            
         }
 
         public async Task<List<PhotoFamilyResponseDto>> GenerateAlbumForFamily(string FamillyId)
@@ -52,7 +80,15 @@ namespace BeToff.BLL
             var NewId = Guid.Parse(Id);
             var IdFamily = Guid.Parse(FamillyId);
             PhotoFamilly Photo = await _photoFamilyDao.GetById(NewId);
-            return PhotoFamilyResponseMapper.ToDto(Photo);
+            if(Photo == null)
+            {
+                return null;
+            }
+            else
+            {
+                return PhotoFamilyResponseMapper.ToDto(Photo);
+            }
+            
         }
 
         public async Task RemovePhotoFromFamilyAlbum(string Id, string FamillyId)
