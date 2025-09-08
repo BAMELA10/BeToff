@@ -57,8 +57,9 @@
                 <h5 class="card-title">@item.AuthorName</h5>
                 <p class="card-text">@item.Content</p>
                 <p class="card-text"><small class="text-body-secondary">@item.PubliedAt</small></p>
-                <a asp-action="Index" class="btn btn-danger">Delete</a>
+                <a asp-action="DeleteCommentOfFamilyPicture" asp-route-id="@Model.picture.FamilyId" asp-route-photoid="@Model.picture.Id" asp-route-commentid="@item.Id" class="btn btn-danger">Delete</a>
             </div>
         </div>
     }
 </div>
+    

@@ -60,6 +60,10 @@ namespace BeToff.BLL
             
         }
 
+        public async Task<Comment> RemoveCommentOfPhotoFamilly(string Id)
+        {
+            return await _commentService.DeleteCommentById(Id);
+        }
         public async Task<List<PhotoFamilyResponseDto>> GenerateAlbumForFamily(string FamillyId)
         {
             var IdFamily = Guid.Parse(FamillyId);
