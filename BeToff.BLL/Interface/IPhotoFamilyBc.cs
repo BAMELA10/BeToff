@@ -12,7 +12,7 @@ namespace BeToff.BLL.Interface
         public Task<PhotoFamilyResponseDto> GetSpecificPcitureOfFamily(string Id, string FamillyId);
         public Task RemovePhotoFromFamilyAlbum(string Id, string FamillyId);
         public Task CommentPhotoFamily(CommentCreateDto Dto);
-
+        public Task<Comment> RemoveCommentOfPhotoFamilly(string Id);
         public Task<List<CommentResponseDto>> ListCommentForspecificPhotoFamily(string IdPhoto);
 
 

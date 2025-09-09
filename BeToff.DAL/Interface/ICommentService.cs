@@ -7,6 +7,7 @@ public interface ICommentService : IComDao<Comment>
 {
     Task InsertComment(Comment comment);
     Task<List<Comment>> GetCommentsByFamilyPicture(string IdPictureFamily);
+    Task<Comment> DeleteCommentById(string Id);
 
 
 

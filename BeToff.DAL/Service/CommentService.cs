@@ -37,8 +37,8 @@ public class CommentService : ICommentService
         await _commentCollection.InsertOneAsync(comment);
     }
 
-    public async Task DeleteCommentById(string Id)
+    public async Task<Comment> DeleteCommentById(string Id)
     {
-
+        return await _commentCollection.FindOneAndDeleteAsync(x => x.Id == Id);
     }
 }

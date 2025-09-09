@@ -317,5 +317,28 @@ namespace BeToff.Web.Controllers
             }
 
         }
+
+        [Route("Familly/{Id}/DisplayPhoto/{PhotoId}/comment/{commentId}")]
+        public async Task<IActionResult> DeleteCommentOfFamilyPicture(string Id, string PhotoId, string commentId)
+        {
+            if (String.IsNullOrEmpty(Id) 
+                || String.IsNullOrEmpty(PhotoId)
+                || String.IsNullOrEmpty(commentId)
+                || String.IsNullOrWhiteSpace(Id)
+                || String.IsNullOrWhiteSpace(PhotoId)
+                || String.IsNullOrWhiteSpace(commentId))
+            {
+                return BadRequest();
+            }
+            var commentDeleted = _photoFamilyBc.RemoveCommentOfPhotoFamilly(commentId);
+            if(commentDeleted == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return RedirectToAction("DisplayFamilyPhoto", new { Id = Id, PhotoId = PhotoId });
+            }
+        }
     }
 }

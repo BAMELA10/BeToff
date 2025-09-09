@@ -16,7 +16,7 @@
             </div>
             <div class="card-body">
                 <a class="btn btn-danger" asp-action="RemoveFamillyPicture" asp-route-id="@items.FamilyId" asp-route-photoId="@items.Id">Delete</a>
-                <a class="btn btn-dark" asp-action="" asp-route-id="" asp-route-photoId="">View</a>
+                <a class="btn btn-dark" asp-action="DisplayFamilyPhoto" asp-route-id="@items.FamilyId" asp-route-photoId="@items.Id">View</a>
             </div>
             <div class="card-footer ">
                 @items.PubliedAt;
