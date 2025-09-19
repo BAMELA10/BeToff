@@ -1,0 +1,56 @@
+﻿@model BeToff.Web.Models.MessageListViewModel;
+
+@*
+    Page for receive and send message for any conversation
+*@
+
+
+<h1>Conversation With @Model.Receiver.FullName</h1>
+
+<div id="discussion">
+@foreach (var item in Model.message)
+{
+    if (item.Sender.Id == Model.Receiver.Id) 
+    {
+        <div class="row justify-content-start">
+            <div class="col-5 col-md-6">
+                <div class="card mb-2 mt-3">
+                    <div class="card-body">
+                        <h5 class="card-title">@item.Sender.FullName</h5>
+                        <p class="card-text">@item.Messages.Content</p>
+                            @*<p class="card-text"><small class="text-body-secondary">@item.Messages.Status</small></p>*@
+                        <p class="card-text"><small class="text-body-secondary">@item.Messages.SendAt</small></p>
+                        @*<a asp-action="DeleteCommentOfFamilyPicture" asp-route-id="@Model.picture.FamilyId" asp-route-photoid="@Model.picture.Id" asp-route-commentid="@item.Id" class="btn btn-danger">Delete</a>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row justify-content-end">
+            <div class="col-5 col-md-6">
+                <div class="card mb-2 mt-3">
+                    <div class="card-body">
+                        <h5 class="card-title">@item.Sender.FullName</h5>
+                        <p class="card-text">@item.Messages.Content</p>
+                            @*<p class="card-text"><small class="text-body-secondary">@item.Messages.Status</small></p>*@
+                        <p class="card-text"><small class="text-body-secondary">@item.Messages.SendAt</small></p>
+                        @*<a asp-action="DeleteCommentOfFamilyPicture" asp-route-id="@Model.picture.FamilyId" asp-route-photoid="@Model.picture.Id" asp-route-commentid="@item.Id" class="btn btn-danger">Delete</a>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+        
+}
+</div>
+<div>
+    <form class="form-control d-inline-flex">
+        <input id="input" class="form-control col-sm-6 col-md-4 col-lg-3" type="text" name="content" id="content" value="" />
+        <button class="btn btn-outline-primary" id="submit">Send</button>
+    </form>
+</div>
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script src="~/js/signalr/dist/browser/signalr.min.js"></script>
+<script src="~/js/Chat.js"></script>

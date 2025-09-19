@@ -28,6 +28,7 @@
                 <td>@item.FamillyConcerned</td>
                 <td>
                     <a class="btn btn-primary" asp-action="Home" asp-route-id="@item.FamillyConcernedId">Select</a>
+
                     <a class="btn btn-success" href="#">Details</a>
                 </td>
             </tr>
@@ -66,7 +67,7 @@
         const value  = input.value;
         const cleanInput = value.trim();
         const Error = document.getElementById('ErrorMessage');
-
+        
         if(value && cleanInput.length != 0)
         {
             return true

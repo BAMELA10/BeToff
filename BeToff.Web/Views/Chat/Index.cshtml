@@ -1,0 +1,51 @@
+﻿@model BeToff.Web.Models.ConversationListViewModel;
+@{
+
+}
+
+@*Get the list of conversation where the current user is a participant*@
+
+<h1 class="fs-5 fw-bold"> Conversations</h1>
+@if(Model.Responses.Count == 0 ){
+    <h2 class="fs-5 fw-bold"> Aucune Conversation</h2>
+}else{
+    <table class="table table-secondary align-middle col-md-10">
+        <tbody class="table-group-divider">
+            @foreach (var item in Model.Responses)
+            {
+                <tr>
+                    <td><a class="btn btn-primary" asp-action="Conversation" asp-route-id="@item.Conversation.Id">@item.Receiver.FullName</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+<button id="showmodal" type="button" class="btn btn-danger col-md-2" data-bs-toggle="modal" data-bs-target="#createModal">New Conversation</button>
+
+<div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <form id="form" asp-action="NewConversation">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group mt-2 mb-2">
+                        <label for="Dest" class="control-label">Reciever</label>
+                        <select name="Dest" class="form-control" asp-items="@Model.User">
+                            <option value=""> ---- Select Familly----</option>
+                        </select>
+                        @*<span class="fs-6 text-danger mt-2" id="ErrorMessage" style="display:none">'Fill the Entry for this action</span>*@
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" Id="submit" class="btn btn-danger">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+

@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.JsonWebTokens;
 namespace BeToff.BLL;
 using BCrypt.Net;
+using BeToff.BLL.Dto.Response;
+using BeToff.BLL.Mapping;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
@@ -68,5 +70,35 @@ public class UserBc : BeToffBc<User, UserDao>, IUserBc
         //{
         //    return String.Empty;
         //}
+    }
+
+    public async Task<List<UserResponseDto>> AllUser()
+    {
+        var result =  await _userDao.GetAll();
+        var list = new List<UserResponseDto>();
+        if (result.Count == 0) 
+        {
+            return list;
+        }
+        else
+        {
+            foreach (var user in result)
+            {
+                var item = UserResponseMapper.ToDto(user);
+                list.Add(item);
+            }
+            return list;
+        }
+    }
+
+    public async Task<UserResponseDto> GetSpecificuser(string Id)
+    {
+        var user = await _userDao.GetUserById(Id);
+        if (user == null)
+        {
+            return null;
+        }
+        var result = UserResponseMapper.ToDto(user);
+        return result;
     }
 }
