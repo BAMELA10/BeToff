@@ -12,15 +12,12 @@ using BeToff.BLL.Mapping;
 
 namespace BeToff.BLL.Service.Impl
 {
-    public class ChatService : IChatService
+    public class ChatService : AbstractChatService,IChatService
     {
         protected readonly IConversationService _conversationService;
-        protected readonly IMessageService _messageService;
-
-        public ChatService(IConversationService conversationService, IMessageService messageService)
+        public ChatService(IConversationService conversationService, IMessageService messageService) : base(messageService)
         {
             _conversationService = conversationService;
-            _messageService = messageService;
         }
 
         public async Task InitializeConversation(string participant_1, string participant_2)
@@ -41,35 +38,6 @@ namespace BeToff.BLL.Service.Impl
             return result;
 
         }
-
-        public async Task SaveMessage(MessageCreateDto message)
-        {
-            var item = MessageCreateMapper.FromDto(message);
-            await _messageService.Create(item);
-        }
-
-        public async Task<List<MessageResponseDto>> LoadMessageForSpecificConversation(string conversationId)
-        {
-            var MessagesList = await _messageService.GetMessagesByConversation(conversationId);
-            var messages = new List<MessageResponseDto>();
-
-            if (MessagesList.Count == 0)
-            {
-                return messages;
-            }
-            else
-            {
-                foreach (var message in MessagesList)
-                {
-                    var items = MessageResponseMapper.ToDto(message);
-                    messages.Add(items);
-                }
-
-                return messages;
-            }
-
-        }
-
         public async Task<List<ConversationResponseDto>> LoadConversationByUser(string participantId)
         {
             var ConversationList = await _conversationService.GetByParticipant(participantId);

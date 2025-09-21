@@ -4,8 +4,9 @@ namespace BeToff.Web.Models
 {
     public class ConversationViewModel
     {
-        public ConversationResponseDto Conversation { get; set; }
+        public ConversationResponseDto? Conversation { get; set; }
         public UserResponseDto Sender { get; set; }
-        public UserResponseDto Receiver { get; set; }
+        public UserResponseDto? Receiver { get; set; }
+
     }
 }

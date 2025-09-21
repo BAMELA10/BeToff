@@ -17,19 +17,20 @@ namespace BeToff.Web.Hubs
         protected readonly IChatService _chatService;
         protected readonly IUserBc _userBc;
         
+        
         public ConversationHub(IChatService chatService, IUserBc userBc)
         {
             _chatService = chatService;
             _userBc = userBc;
         }
-        public override async Task OnConnectedAsync()
+        public async Task JoinConversation()
         {
-            
             var CurrentUser = Context.User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
             var conversation = await _chatService.LoadConversationByUser(CurrentUser);
             var Dico = new Dictionary<string, List<UserResponseDto>>();
-            
-            if (conversation.Count != 0) {
+
+            if (conversation.Count != 0)
+            {
                 foreach (var item in conversation)
                 {
                     var receiverId = "";
@@ -49,8 +50,12 @@ namespace BeToff.Web.Hubs
 
                 }
                 var Serialized = JsonConvert.SerializeObject(Dico);
-                Clients.User(CurrentUser).SendAsync("CachingMessage", Serialized);
+                await Clients.User(CurrentUser).SendAsync("CachingMessage", Serialized);
             }
+        }
+        public override async Task OnConnectedAsync()
+        {
+            await this.JoinConversation();
             await base.OnConnectedAsync();
         }
 

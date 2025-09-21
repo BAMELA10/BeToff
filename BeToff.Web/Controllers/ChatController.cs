@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.SignalR;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using BeToff.Entities;
+using BeToff.BLL.Dto.Response;
+using NuGet.Protocol.Plugins;
+using BeToff.BLL.Mapping;
 
 namespace BeToff.Web.Controllers
 {
@@ -14,11 +17,15 @@ namespace BeToff.Web.Controllers
     {
         protected readonly IChatService _chatService;
         protected readonly IUserBc _userBc;
+        protected readonly IChatGroupService _chatGroupService;
+        protected readonly IFamillyBc _famillyBc;
 
-        public ChatController(IChatService chatService, IUserBc userBc)
+        public ChatController(IChatService chatService, IUserBc userBc, IFamillyBc famillyBc, IChatGroupService chatGroupService)
         {
             _chatService = chatService;
             _userBc = userBc;
+            _chatGroupService = chatGroupService;
+            _famillyBc = famillyBc;
         }
         public async Task<IActionResult> Index()
         {
@@ -26,7 +33,9 @@ namespace BeToff.Web.Controllers
 
             // Get all conversation for specific user
             var conversation = await _chatService.LoadConversationByUser(CurrentUser);
+            var conversationGroup = await _chatGroupService.LoadConversationByUser(CurrentUser);
             var conversationViewList = new List<ConversationViewModel>();
+            var conversationGroupViewList = new List<ConversationGroupViewModel>();
             foreach (var item in conversation)
             {
                 var receiverId = "";
@@ -51,10 +60,25 @@ namespace BeToff.Web.Controllers
 
                 conversationViewList.Add(finalItem);
             }
+            foreach (var item in conversationGroup)
+            {
+                var Family = await _famillyBc.SelectFamilly(item.Family);
+                var DtoFamily = FamillyMapper.ToDto(Family);
+
+                var finalItem1 = new ConversationGroupViewModel
+                {
+                    ConversationGroup = item,
+                    Family = DtoFamily
+
+                };
+
+                conversationGroupViewList.Add(finalItem1);
+            }
             var users = await _userBc.AllUser();
             var model = new ConversationListViewModel
             {
                 Responses = conversationViewList,
+                ResponsesGroup = conversationGroupViewList,
                 Count = conversationViewList.Count,
                 User = users.Select(c => new SelectListItem
                 {
@@ -63,8 +87,8 @@ namespace BeToff.Web.Controllers
                 })
 
             };
-            // Get all user
-            //await _userBc.G
+            
+
             return View(model);
         }
 
@@ -91,6 +115,7 @@ namespace BeToff.Web.Controllers
             // Get all message for a specific conversation
             var messages = await _chatService.LoadMessageForSpecificConversation(Id);
             var conversation = await _chatService.TakeConversation(Id);
+            
             var receiverId = "";
             foreach (var x in conversation.Participant)
             {
@@ -151,6 +176,85 @@ namespace BeToff.Web.Controllers
             }
             
             
+        }
+
+
+        [Route("/Chat/ConversationGroup/{Id}")]
+        public async Task<IActionResult> ConversationGroup(string Id)
+        {
+            var CurrentUser = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+            // Get all message for a specific conversation
+            var messages = await _chatService.LoadMessageForSpecificConversation(Id);
+            var conversation = await _chatGroupService.TakeConversation(Id);
+            var Family = await _famillyBc.SelectFamilly(conversation.Family);
+            var DtoFamily = FamillyMapper.ToDto(Family);
+            var ListReceiverDto = new List<UserResponseDto>();
+            var receiverId = new List<string>();
+            foreach (var x in conversation.Participants)
+            {
+                if (!x.Equals(CurrentUser))
+                {
+                    receiverId.Add(x);
+                }
+            }
+            foreach (var x in receiverId)
+            {
+                var receiver = await _userBc.GetSpecificuser(x);
+                ListReceiverDto.Add(receiver);
+            }
+
+            //var sender = await _userBc.GetSpecificuser(CurrentUser);
+            if (messages == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                var messagesViewList = new List<MessageViewModel>();
+                if (messages.Count != 0)
+                {
+                    foreach (var item in messages)
+                    {
+                        //Recuperer l'evoyeur et le receveur en BD
+                        var sender = await _userBc.GetSpecificuser(item.Sender);
+
+                        var finalItem = new MessageViewModel
+                        {
+                            Messages = item,
+                            Sender = sender,
+
+                        };
+
+                        messagesViewList.Add(finalItem);
+                    }
+
+                    // Get conversation's detail
+                    var model = new MessageListViewModel
+                    {
+                        message = messagesViewList,
+                        Count = messagesViewList.Count,
+                        ConversationGroup = conversation,
+                        Receivers = ListReceiverDto,
+                        FamillyResponse = DtoFamily
+                    };
+
+                    return View(model);
+                }
+                else
+                {
+                    var model = new MessageListViewModel
+                    {
+                        message = new List<MessageViewModel>(),
+                        Count = 0,
+                        ConversationGroup = conversation,
+                        Receivers = ListReceiverDto,
+                        FamillyResponse = DtoFamily
+                    };
+                    return View(model);
+                }
+
+            }
+
         }
     }
 }

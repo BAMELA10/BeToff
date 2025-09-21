@@ -6,7 +6,10 @@ namespace BeToff.Web.Models
     {
         public List<MessageViewModel> message { get; set; }
         public int Count  { get; set; }
-        public UserResponseDto Receiver { get; set; }
-        public ConversationResponseDto Conversation{ get; set; }
+        public UserResponseDto? Receiver { get; set; }
+        public List<UserResponseDto> Receivers { get; set; } = new List<UserResponseDto>();
+        public ConversationResponseDto? Conversation{ get; set; }
+        public ConversationGroupResponseDto? ConversationGroup { get; set; }
+        public FamillyResponseDto? FamillyResponse{ get; set; }
     }
 }
