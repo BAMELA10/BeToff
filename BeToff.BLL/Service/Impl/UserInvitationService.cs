@@ -14,10 +14,13 @@ namespace BeToff.BLL.Service.Impl
     {
         protected readonly IInvitationDao _invitationDao;
         protected readonly IRegistrationDao _registrationDao;
-        public UserInvitationService(IInvitationDao invitationDao, IRegistrationDao registrationDao)
+        protected readonly IConversationGroupsService _conversationGroupsService;
+        public UserInvitationService(IInvitationDao invitationDao, IRegistrationDao registrationDao,IConversationGroupsService conversationGroupsService)
         {
             _invitationDao = invitationDao;
             _registrationDao = registrationDao;
+            _conversationGroupsService = conversationGroupsService;
+
         }
 
         public async Task<Task> AcceptInvitation(string invitationId)
@@ -35,6 +38,7 @@ namespace BeToff.BLL.Service.Impl
             {
                 await _registrationDao.AddRegistration(Item.FamillyId, Item.ReceiverId);
                 await _invitationDao.AcceptInvitation(IdInvitation);
+                await _conversationGroupsService.AddParticipantInConversation(Item.FamillyId.ToString(), Item.ReceiverId.ToString());
             }
             else {
                 throw new Exception("The Current Invitation Doesn't exist");

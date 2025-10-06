@@ -2,9 +2,11 @@
 using BeToff.BLL.Dto.Response;
 using BeToff.BLL.Interface;
 using BeToff.BLL.Service.Interface;
+using BeToff.BLL.EventArg;
 using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
 using NuGet.Protocol.Plugins;
+using System.Net.Mail;
 using System.Security.Claims;
 
 namespace BeToff.Web.Hubs
@@ -13,12 +15,10 @@ namespace BeToff.Web.Hubs
     {
         protected readonly IChatGroupService _chatService;
         protected readonly IUserBc _userBc;
-        protected readonly IRegistrationBc _registrationBc;
-        public ConversationGroupsHub(IChatGroupService chatService, IUserBc userBc, IRegistrationBc registrationBc)
+        public ConversationGroupsHub(IChatGroupService chatService, IUserBc userBc)
         {
             _chatService = chatService;
             _userBc = userBc;
-            _registrationBc = registrationBc;
         }
         public async Task SendMessage(string conversation, string content)
         {
@@ -75,5 +75,6 @@ namespace BeToff.Web.Hubs
             await this.JoinGroupConversation();
             await base.OnConnectedAsync();
         }
+
     }
 }

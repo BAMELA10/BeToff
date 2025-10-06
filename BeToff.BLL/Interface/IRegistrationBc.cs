@@ -1,4 +1,5 @@
 ﻿using BeToff.BLL.Dto.Response;
+using BeToff.BLL.EventArg;
 using BeToff.Entities;
 using System;
 using System.Collections.Generic;

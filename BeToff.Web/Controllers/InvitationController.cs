@@ -13,6 +13,7 @@ using BeToff.BLL.Dto.Response;
 using Microsoft.AspNetCore.Http.Features;
 using BeToff.BLL.Mapping;
 using System.Security.Claims;
+using BeToff.BLL.Service.Impl;
 
 namespace BeToff.Web.Controllers
 {
@@ -20,13 +21,17 @@ namespace BeToff.Web.Controllers
     {
         private readonly IUserInvitationService _invitaionService;
         private readonly IHubContext<NotificationHub> _notificationHub;
+        private readonly IHubContext<ConversationGroupsHub> _conversationGroupHub;
         private readonly BeToffDbContext _dbContext;
+        private readonly IChatGroupService _chatService;
 
-        public InvitationController(IUserInvitationService invitaionService, IHubContext<NotificationHub> notificationHub, BeToffDbContext dbContext)
+        public InvitationController(IUserInvitationService invitaionService, IHubContext<NotificationHub> notificationHub, BeToffDbContext dbContext, IChatGroupService chatService, IHubContext<ConversationGroupsHub> conversationGroupHub)
         {
             _invitaionService = invitaionService;
             _notificationHub = notificationHub;
             _dbContext = dbContext;
+            _chatService = chatService;
+            _conversationGroupHub = conversationGroupHub;
 
         }
 
@@ -129,6 +134,10 @@ namespace BeToff.Web.Controllers
         public async Task<IActionResult> AcceptionInvitation(string Id)
         {
             await _invitaionService.AcceptInvitation(Id);
+            var CurrentUser = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+            var conversation = await _chatService.LoadConversationByUser(CurrentUser);
+            int lastIndex = conversation.Count - 1;
+            await _conversationGroupHub.Clients.Group(conversation[lastIndex].id).SendAsync("SignalReconexion", conversation[lastIndex].id);
             return RedirectToAction(nameof(Index));
         }
         public async Task<IActionResult> RefuseInvitation(string Id)

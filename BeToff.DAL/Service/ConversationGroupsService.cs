@@ -12,6 +12,7 @@ namespace BeToff.DAL.Service
 {
     public class ConversationGroupsService: IConversationGroupsService
     {
+
         protected readonly IMongoCollection<ConversationGroup> _collection;
 
         public ConversationGroupsService(IOptions<ConversationGroupDatabaseSettings> Settings)
@@ -35,6 +36,13 @@ namespace BeToff.DAL.Service
         public async Task<List<ConversationGroup>> GetByParticipant(string ParticipantId)
         {
             return await _collection.Find(x => x.Participants.Contains(ParticipantId)).ToListAsync();
+        }
+
+        public async Task<ConversationGroup> AddParticipantInConversation(string Family, string ParticipantId)
+        {
+            var filter = Builders<ConversationGroup>.Filter.Eq(x => x.Family , Family);
+            var udpate = Builders<ConversationGroup>.Update.Push(x => x.Participants, ParticipantId);
+            return await _collection.FindOneAndUpdateAsync<ConversationGroup>(filter, udpate);
         }
     }
 }

@@ -2,6 +2,7 @@
 using BeToff.BLL.Interface;
 using BeToff.BLL.Mapping;
 using BeToff.DAL;
+using BeToff.BLL.EventArg;
 using BeToff.DAL.Interface;
 using BeToff.Entities;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -10,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BeToff.DAL.Service;
 
 namespace BeToff.BLL
 {
@@ -17,10 +19,12 @@ namespace BeToff.BLL
     {
         private readonly IRegistrationDao _Dao;
         private readonly IFamillyDao _famillyDao;
-        public RegistrationBc(IRegistrationDao dao, IFamillyDao famillyDao)
+        private readonly IConversationGroupsService _conversationGroupsService;
+        public RegistrationBc(IRegistrationDao dao, IFamillyDao famillyDao, IConversationGroupsService conversationGroupsService)
         {
              _Dao = dao;
             _famillyDao = famillyDao;
+            _conversationGroupsService = conversationGroupsService;
         }
 
         public async Task<List<RegistrationResponseDto>> ListOfRegistrationForFamilly(string FamillyId)
@@ -54,6 +58,8 @@ namespace BeToff.BLL
         {
             Guid IdMember = Guid.Parse(MemberId);
             await _Dao.AddRegistration(FamillyId, IdMember);
+            var Conversation = await _conversationGroupsService.AddParticipantInConversation(FamillyId.ToString(), MemberId);
+            //Handler.Invoke(this, new ParticipantAddedEventArgs { conversationId = Conversation.Id });
         }
 
         public async Task RemoveSpecificFamillyMember(string FamillyId, string MemberId, string Userid)

@@ -61,6 +61,10 @@ async function start() {
         var dico = sessionStorage.getItem("DicoGroup")
         console.log(dico);
     })
+
+    connection.on("SignalReconexion", (message) => {
+        connection.invoke("JoinGroupConversation");
+    })
     await connection.start();
     console.log("SignalR Connected.");
 
