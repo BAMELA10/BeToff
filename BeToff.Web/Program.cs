@@ -30,6 +30,14 @@ builder.Services.AddDbContext<BeToffDbContext>(
 builder.Services.Configure<CommentDatabaseSettings>(
     builder.Configuration.GetSection("NonRelationalSetting"));
 
+builder.Services.Configure<ConversationDatabaseSettings>(
+    builder.Configuration.GetSection("NonRelationalSetting"));
+
+builder.Services.Configure<MessageDatabaseSettings>(
+    builder.Configuration.GetSection("NonRelationalSetting"));
+
+builder.Services.Configure<ConversationGroupDatabaseSettings>(
+    builder.Configuration.GetSection("NonRelationalSetting"));
 
 builder.Services.AddTransient<IUserDao, UserDao>();
 builder.Services.AddTransient<IUserBc, UserBc>();
@@ -43,7 +51,14 @@ builder.Services.AddTransient<IInvitationDao, InvitationDao>();
 builder.Services.AddTransient<IUserInvitationService, UserInvitationService>();
 builder.Services.AddTransient<IPhotoFamilyDao, PhotoFamilyDao>();
 builder.Services.AddTransient<IPhotoFamilyBc, PhotoFamilyBc>();
+builder.Services.AddTransient<IChatService, ChatService>();
+builder.Services.AddTransient<IChatGroupService, ChatGroupService>();
+
 builder.Services.AddSingleton<ICommentService, CommentService>();
+builder.Services.AddSingleton<IConversationService, ConversationService>();
+builder.Services.AddSingleton<IMessageService, MessageService>();
+builder.Services.AddSingleton<IConversationGroupsService, ConversationGroupsService>();
+
 builder.Services.AddHostedService<WebBackgroundService>();
 
 builder.WebHost.ConfigureKestrel(serverOptions =>
@@ -102,6 +117,8 @@ app.UseStaticFiles(new StaticFileOptions
 });
 
 app.MapHub<NotificationHub>("/Notification");
+app.MapHub<ConversationHub>("/Chat");
+app.MapHub<ConversationGroupsHub>("/ChatGroup");
 
 app.MapControllerRoute(
     name: "default",

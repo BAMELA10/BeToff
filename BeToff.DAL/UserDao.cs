@@ -39,4 +39,8 @@ public class UserDao : BeToffDao, IUserDao
         }
         return user;
     }
+    public async Task<List<User>> GetAll()
+    {
+        return await _UserDB.Users.ToListAsync();
+    }
 }

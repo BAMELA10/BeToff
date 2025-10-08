@@ -22,6 +22,7 @@ namespace BeToff.Web.Controllers
         private readonly IRegistrationBc _registrationBc;
         private readonly IWebHostEnvironment _hostEnvironment;
         private readonly IPhotoFamilyBc _photoFamilyBc;
+        private readonly IChatGroupService _chatGroupService;
         private readonly int _MaxBufferSize = 512 * 1024 * 1024;
         private readonly List<string> _ExtensionAuthorized = [".png", ".jpg", ".jpeg"];
 
@@ -253,6 +254,13 @@ namespace BeToff.Web.Controllers
                 string CurrentUser = User.FindFirst(ClaimTypes.NameIdentifier).Value;
                 Guid IdFamilly = await _famillyBc.SaveFamilly(NameOfFamilly, CurrentUser);
                 await _registrationBc.RegistrationOfMemberOfFamilly(IdFamilly, CurrentUser);
+                var Dto = new ConversationGroupCreateDto
+                {
+                    Family = IdFamilly.ToString(),
+                    Participants = [CurrentUser],
+                    StartDate = DateTime.Now
+                };
+                await _chatGroupService.InitializeConversation(Dto);
                 return RedirectToAction(nameof(Index));
 
             }

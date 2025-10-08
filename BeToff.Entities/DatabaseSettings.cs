@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace BeToff.Entities
 {
-    public class CommentDatabaseSettings : DatabaseSettings
+    public abstract class DatabaseSettings
     {
-        public string? CommentCollectionName { get; set; }
+        public string? ConnectionString { get; set; }
+        public string? DatabaseName { get; set; }
     }
 }
